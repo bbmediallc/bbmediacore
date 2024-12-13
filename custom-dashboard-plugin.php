@@ -277,3 +277,77 @@ function bb_display_current_year($atts, $content = null) {
     return date('Y'); // Returns the current year
 }
 add_shortcode('bbyear', 'bb_display_current_year');
+
+// Add GitHub Updater
+
+// Hook into plugin update checks
+add_filter('pre_set_site_transient_update_plugins', 'bb_media_core_check_for_updates');
+add_filter('plugins_api', 'bb_media_core_plugin_info', 10, 3);
+
+function bb_media_core_check_for_updates($transient) {
+    if (empty($transient->checked)) {
+        return $transient;
+    }
+
+    $plugin_slug = 'bbmediacore'; // Your plugin folder name
+    $plugin_data = get_plugin_data(__FILE__);
+    $plugin_version = $plugin_data['Version'];
+
+    // GitHub API URL for your plugin's release
+    $remote_url = 'https://api.github.com/repos/bbmediallc/your-repo/releases/latest';
+
+    $response = wp_remote_get($remote_url);
+
+    if (is_wp_error($response)) {
+        return $transient;
+    }
+
+    $remote = json_decode(wp_remote_retrieve_body($response));
+
+    if (isset($remote->tag_name) && version_compare($plugin_version, $remote->tag_name, '<')) {
+        $plugin = plugin_basename(__FILE__);
+        $transient->response[$plugin] = (object) [
+            'slug'        => $plugin_slug,
+            'plugin'      => $plugin,
+            'new_version' => $remote->tag_name,
+            'package'     => $remote->assets[0]->browser_download_url,
+            'url'         => $remote->html_url,
+        ];
+    }
+
+    return $transient;
+}
+
+function bb_media_core_plugin_info($result, $action, $args) {
+    if ($action !== 'plugin_information') {
+        return $result;
+    }
+
+    if ($args->slug !== 'bb-media-core') {
+        return $result;
+    }
+
+    $remote_url = 'https://api.github.com/repos/yourusername/your-repo/releases/latest';
+
+    $response = wp_remote_get($remote_url);
+
+    if (is_wp_error($response)) {
+        return $result;
+    }
+
+    $remote = json_decode(wp_remote_retrieve_body($response));
+
+    $result = (object) [
+        'name'          => 'BB Media Core',
+        'slug'          => 'bb-media-core',
+        'version'       => $remote->tag_name,
+        'author'        => '<a href="https://bandbmedia.com">B&B Media</a>',
+        'homepage'      => $remote->html_url,
+        'download_link' => $remote->assets[0]->browser_download_url,
+        'sections'      => [
+            'description' => 'BB Media Core is a plugin that enhances WordPress admin functionality for B&B Media websites.',
+        ],
+    ];
+
+    return $result;
+}
