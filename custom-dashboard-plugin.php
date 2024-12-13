@@ -323,7 +323,7 @@ function bb_media_core_plugin_info($result, $action, $args) {
         return $result;
     }
 
-    if ($args->slug !== 'bb-media-core') {
+    if ($args->slug !== 'bbmediacore') {
         return $result;
     }
 
@@ -339,7 +339,7 @@ function bb_media_core_plugin_info($result, $action, $args) {
 
     $result = (object) [
         'name'          => 'BB Media Core',
-        'slug'          => 'bb-media-core',
+        'slug'          => 'bbmediacore',
         'version'       => $remote->tag_name,
         'author'        => '<a href="https://bandbmedia.com">B&B Media</a>',
         'homepage'      => $remote->html_url,
