@@ -1,0 +1,224 @@
+/*
+Plugin Name: BB Media Core
+Description: Custom CSS for the BB Media Core plugin.
+Version: 1.1
+Author: B&B Media, LLC
+*/
+
+.welcome-message {
+    width: 100%;
+}
+
+.custom-dashboard-layout {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 40px;
+    padding: 50px 10px;
+    row-gap: 20px;
+}
+
+.welcome-message p {
+    margin: 0px;
+    font-size: 18px;
+}
+
+.custom-dashboard-layout h2 {
+    margin-bottom: 0px !important;
+    margin-top: 0px !important;
+}
+
+custom-dashboard-layout p {
+    margin-bottom: 20px !important;
+    margin-top: 5px !important;
+}
+
+.custom-dashboard-left,
+.custom-dashboard-right {
+    flex: 1;
+    min-width: 300px;
+}
+
+.support-header {
+    display: flex;
+    flex-direction: row;
+    column-gap: 20px;
+    padding-bottom: 10px;
+    border-bottom: solid 1px #dddddd;
+    margin-bottom: 20px;
+    justify-content: space-between;
+}
+
+.custom-dashboard-right form input[type=submit] {
+    background: #ffffff;
+    padding: 20px 30px;
+    border: solid 2px #36489d;
+    color: #36489d;
+    text-transform: uppercase;
+    font-weight: 700;
+    transition: ease all .250s;
+    cursor: pointer;
+}
+
+.custom-dashboard-right form input[type=submit]:hover {
+    background: #36489d;
+    color: #ffffff;
+    transition: ease all .250s;
+}
+
+.custom-dashboard-right .support-form {
+    background: #ffffff;
+    padding: 25px;
+    border-top: solid 4px #35479d;
+    box-shadow: 0 0 20px #00000021;
+}
+
+.custom-dashboard-right form {
+    display: flex !important;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.custom-dashboard-right form textarea,
+.custom-dashboard-right form select,
+.custom-dashboard-right form input[type=text],
+.custom-dashboard-right form input[type=email] {
+    width: 100% !important;
+    max-width: unset;
+    margin-bottom: 15px;
+    margin-top: 4px;
+}
+
+/* Blog post container */
+
+.latest-blog-posts {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.blog-post-item {
+    display: flex;
+    margin-bottom: 20px;
+    background: #ffffff;
+    padding: 25px;
+    border-top: solid 4px #35479d;
+    box-shadow: 0 0 20px #00000021;
+}
+
+.post-image {
+    width: 33%;
+    padding-right: 15px; 
+    height: 0;
+    padding-bottom: 35%;
+    background-size: cover;
+    background-position: 50%;
+}
+
+.post-image img {
+    width: 100%; 
+}
+
+.post-details {
+    width: 67%;
+}
+
+.post-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #333;
+    text-decoration: none;
+}
+
+.post-title:hover {
+    color: #0073aa; /* Change color on hover */
+}
+
+.post-date {
+    display: block;
+    font-size: 0.9em;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.excerpt {
+    font-size: 1em;
+    color: #555;
+}
+
+.continue-reading {
+    font-weight: bold;
+    color: #0073aa;
+    text-decoration: none;
+}
+
+.continue-reading:hover {
+    text-decoration: underline;
+}
+
+.blog-post-content {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    column-gap: 25px;
+}
+
+@media(min-width: 1300px){
+    a.post-title, .form-left h2 {
+        font-size: 24px;
+        line-height: 1;
+    }
+
+    a.post-title {
+        display: block;
+        margin-top: 20px;
+    }
+
+    span.post-date {
+        font-size: 16px;
+        line-height: 1;
+        margin-top: 10px;
+    }
+}
+
+@media (max-width: 768px) {
+    .custom-dashboard-layout {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 320px) {
+    .custom-dashboard-left,
+    .custom-dashboard-right {
+        min-width: 100%;
+    }
+}
+
+.loading-indicator {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #555;
+    text-align: center;
+}
+
+input[type="submit"][disabled] {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.success-message {
+    color: #155724;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 5px;
+}
+
+.error-message {
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 5px;
+}
