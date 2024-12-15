@@ -3,7 +3,7 @@
 Plugin Name: BB Media Core
 Plugin URI: https://bandbmedia.com
 Description: A plugin that provides core functionality for B&B Media websites.
-Version: 1.3.1
+Version: 1.3.2
 Author: B&B Media, LLC
 Author URI: https://bandbmedia.com
 License: GPLv2 or later
