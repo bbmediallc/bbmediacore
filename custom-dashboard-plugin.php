@@ -3,7 +3,7 @@
 Plugin Name: BB Media Core
 Plugin URI: https://bandbmedia.com
 Description: A plugin that provides core functionality for B&B Media websites.
-Version: 1.1
+Version: 1.3
 Author: B&B Media, LLC
 Author URI: https://bandbmedia.com
 License: GPLv2 or later
@@ -34,36 +34,112 @@ function custom_login_logo() {
 }
 add_action('login_enqueue_scripts', 'custom_login_logo');
 
+// Create a Settings Tab
+function bb_media_settings_page() {
+    // Check if the user has submitted the form to save the token
+    if (isset($_POST['bb_media_save_token']) && check_admin_referer('bb_media_save_token_action', 'bb_media_nonce')) {
+        $token = sanitize_text_field($_POST['bb_media_license_token']);
+        update_option('bb_media_license_token', $token); // Save the token in the database
+        echo '<div class="updated"><p>Token saved successfully!</p></div>';
+    }
+
+    // Check if the user has submitted the form to deactivate the token
+    if (isset($_POST['bb_media_deactivate_token']) && check_admin_referer('bb_media_deactivate_token_action', 'bb_media_nonce')) {
+        delete_option('bb_media_license_token'); // Remove the token from the database
+        echo '<div class="updated"><p>Token deactivated successfully!</p></div>';
+    }
+
+    // Retrieve the saved token
+    $saved_token = get_option('bb_media_license_token', '');
+
+    ?>
+    <div class="wrap">
+        <h1>B&B Media Plugin Settings</h1>
+        <?php if (empty($saved_token)): ?>
+            <!-- Show input field if token is not set -->
+            <p>Enter your GitHub token below to enable plugin updates.</p>
+            <form method="post">
+                <?php wp_nonce_field('bb_media_save_token_action', 'bb_media_nonce'); ?>
+                <table class="form-table">
+                    <tr>
+                        <th scope="row"><label for="bb_media_license_token">License Token</label></th>
+                        <td>
+                            <input type="text" name="bb_media_license_token" id="bb_media_license_token" 
+                                   class="regular-text" required />
+                        </td>
+                    </tr>
+                </table>
+                <p class="submit">
+                    <input type="submit" name="bb_media_save_token" id="bb_media_save_token" 
+                           class="button button-primary" value="Save Token">
+                </p>
+            </form>
+        <?php else: ?>
+            <!-- Show message and deactivate button if token is set -->
+            <p>Your token is active and updates are enabled.</p>
+            <form method="post">
+                <?php wp_nonce_field('bb_media_deactivate_token_action', 'bb_media_nonce'); ?>
+                <p class="submit">
+                    <input type="submit" name="bb_media_deactivate_token" id="bb_media_deactivate_token" 
+                           class="button button-secondary" value="Deactivate Token">
+                </p>
+            </form>
+        <?php endif; ?>
+    </div>
+    <?php
+}
+
+// Remove default dashboard menu item
+function remove_default_dashboard_menu() {
+    remove_menu_page('index.php'); // Removes "Dashboard"
+}
+add_action('admin_menu', 'remove_default_dashboard_menu', 999);
+
+// Add the custom dashboard page
+function add_custom_dashboard_page() {
+    add_menu_page(
+        'Custom Dashboard',          // Page title
+        'Dashboard',                 // Menu title
+        'manage_options',            // Capability
+        'custom_dashboard',          // Slug
+        'custom_dashboard_content',  // Callback to render content
+        'dashicons-admin-home',      // Icon
+        2                            // Position
+    );
+
+    // Add the settings submenu
+    add_submenu_page(
+        'custom_dashboard',          // Parent slug
+        'Settings',                  // Page title
+        'Settings',                  // Menu title
+        'manage_options',            // Capability
+        'bb-media-settings',         // Slug
+        'bb_media_settings_page'     // Callback to render settings page
+    );
+}
+add_action('admin_menu', 'add_custom_dashboard_page');
+
 // Force redirection from default dashboard to the custom dashboard
 function redirect_to_custom_dashboard() {
-    // Ensure the user is logged in and has access to the admin area
-    if (is_user_logged_in() && is_admin()) {
-        // Redirect from the default dashboard to the custom dashboard
+    global $pagenow;
+
+    // Skip redirection if on the settings page or custom dashboard
+    if (isset($_GET['page']) && in_array($_GET['page'], ['custom_dashboard', 'bb-media-settings'])) {
+        return;
+    }
+
+    // Redirect only from the default dashboard (index.php)
+    if ($pagenow === 'index.php' && is_user_logged_in() && current_user_can('manage_options')) {
         wp_redirect(admin_url('admin.php?page=custom_dashboard'));
         exit;
     }
 }
-add_action('load-index.php', 'redirect_to_custom_dashboard');
+add_action('admin_init', 'redirect_to_custom_dashboard');
 
-// Remove default dashboard menu item
-function remove_default_dashboard_menu() {
-    remove_menu_page('index.php'); // Remove default dashboard
+if (defined('WP_DEBUG') && WP_DEBUG) {
+    error_log('Custom Dashboard: Redirect function fired.');
+    error_log('Custom Dashboard: Menu items added.');
 }
-add_action('admin_menu', 'remove_default_dashboard_menu', 999);
-
-// Add custom dashboard page
-function add_custom_dashboard_page() {
-    add_menu_page(
-        'Dashboard', // Page title
-        'Dashboard',        // Menu title
-        'read',             // Required capability
-        'custom_dashboard', // Page slug (used for redirect)
-        'custom_dashboard_content', // Callback function to display the content
-        'dashicons-admin-home', // Icon for the menu item
-        2 // Position in the menu
-    );
-}
-add_action('admin_menu', 'add_custom_dashboard_page');
 
 // Custom dashboard page content
 function custom_dashboard_content() {
@@ -278,24 +354,22 @@ function bb_display_current_year($atts, $content = null) {
 }
 add_shortcode('bbyear', 'bb_display_current_year');
 
-// Add GitHub Updater
+
+
 
 // Hook into plugin update checks
 add_filter('pre_set_site_transient_update_plugins', 'bb_media_core_check_for_updates');
-add_filter('plugins_api', 'bb_media_core_plugin_info', 10, 3);
 
 function bb_media_core_check_for_updates($transient) {
     if (empty($transient->checked)) {
         return $transient;
     }
 
-    $plugin_slug = 'bbmediacore'; // Your plugin folder name
+    $plugin_slug = 'bbmediacore'; // Folder name for your plugin
     $plugin_data = get_plugin_data(__FILE__);
     $plugin_version = $plugin_data['Version'];
 
-    // GitHub API URL for your plugin's release
     $remote_url = 'https://api.github.com/repos/bbmediallc/your-repo/releases/latest';
-
     $response = wp_remote_get($remote_url);
 
     if (is_wp_error($response)) {
@@ -303,7 +377,6 @@ function bb_media_core_check_for_updates($transient) {
     }
 
     $remote = json_decode(wp_remote_retrieve_body($response));
-
     if (isset($remote->tag_name) && version_compare($plugin_version, $remote->tag_name, '<')) {
         $plugin = plugin_basename(__FILE__);
         $transient->response[$plugin] = (object) [
@@ -316,38 +389,4 @@ function bb_media_core_check_for_updates($transient) {
     }
 
     return $transient;
-}
-
-function bb_media_core_plugin_info($result, $action, $args) {
-    if ($action !== 'plugin_information') {
-        return $result;
-    }
-
-    if ($args->slug !== 'bbmediacore') {
-        return $result;
-    }
-
-    $remote_url = 'https://api.github.com/repos/yourusername/your-repo/releases/latest';
-
-    $response = wp_remote_get($remote_url);
-
-    if (is_wp_error($response)) {
-        return $result;
-    }
-
-    $remote = json_decode(wp_remote_retrieve_body($response));
-
-    $result = (object) [
-        'name'          => 'BB Media Core',
-        'slug'          => 'bbmediacore',
-        'version'       => $remote->tag_name,
-        'author'        => '<a href="https://bandbmedia.com">B&B Media</a>',
-        'homepage'      => $remote->html_url,
-        'download_link' => $remote->assets[0]->browser_download_url,
-        'sections'      => [
-            'description' => 'BB Media Core is a plugin that enhances WordPress admin functionality for B&B Media websites.',
-        ],
-    ];
-
-    return $result;
 }
