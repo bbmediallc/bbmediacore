@@ -369,7 +369,7 @@ function bb_media_core_check_for_updates($transient) {
     $plugin_data = get_plugin_data(__FILE__);
     $plugin_version = $plugin_data['Version'];
 
-    $remote_url = 'https://api.github.com/repos/bbmediallc/your-repo/releases/latest';
+    $remote_url = 'https://api.github.com/repos/bbmediallc/bbmediacore/releases/latest';
     $response = wp_remote_get($remote_url);
 
     if (is_wp_error($response)) {
