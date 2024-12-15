@@ -3,7 +3,7 @@
 Plugin Name: BB Media Core
 Plugin URI: https://bandbmedia.com
 Description: A plugin that provides core functionality for B&B Media websites.
-Version: 1.3
+Version: 1.3.1
 Author: B&B Media, LLC
 Author URI: https://bandbmedia.com
 License: GPLv2 or later
@@ -26,9 +26,39 @@ function custom_login_logo() {
             width: 320px;
             height: 80px;
         }
+
         body.login {
-            background-color: #f4f4f4;
+            background: url('<?php echo esc_url(plugin_dir_url(__FILE__) . 'images/login-bg.jpg'); ?>');
+            background-size: cover;
+            background-position: 50%;
         }
+
+        .login form {
+            border: unset !important;
+        }
+
+        div#login {
+            background: #ffffff;
+            padding: 25px;
+            border-top: solid 4px #35479d;
+            box-shadow: 0 0 40px #36489d;
+            position: relative;
+            top: 25%;
+            transform: translateY(-25%) !important;
+        }
+
+        body.login:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: transparent;
+            background-image: linear-gradient(-45deg, #26c2e0 1%, #35479d 100%);
+            opacity: .9;
+        }
+
     </style>
     <?php
 }
@@ -95,7 +125,7 @@ function remove_default_dashboard_menu() {
 }
 add_action('admin_menu', 'remove_default_dashboard_menu', 999);
 
-// Add the custom dashboard page
+// Add the custom dashboard and updates page links
 function add_custom_dashboard_page() {
     add_menu_page(
         'Custom Dashboard',          // Page title
@@ -116,15 +146,37 @@ function add_custom_dashboard_page() {
         'bb-media-settings',         // Slug
         'bb_media_settings_page'     // Callback to render settings page
     );
+
+    // Add Updates link
+    add_submenu_page(
+        'custom_dashboard',          // Parent slug
+        'WordPress Updates',         // Page title
+        'Updates',                   // Menu title
+        'manage_options',            // Capability
+        'update-core.php',           // Slug (core WP Updates page)
+        null                         // No callback needed, WordPress handles this
+    );
 }
 add_action('admin_menu', 'add_custom_dashboard_page');
+
 
 // Force redirection from default dashboard to the custom dashboard
 function redirect_to_custom_dashboard() {
     global $pagenow;
 
-    // Skip redirection if on the settings page or custom dashboard
-    if (isset($_GET['page']) && in_array($_GET['page'], ['custom_dashboard', 'bb-media-settings'])) {
+    // Skip redirection for specific pages
+    $excluded_pages = [
+        'custom_dashboard',    // Custom dashboard
+        'bb-media-settings',   // Plugin settings
+        'update-core.php'      // WordPress Updates page
+    ];
+
+    if (isset($_GET['page']) && in_array($_GET['page'], $excluded_pages)) {
+        return;
+    }
+
+    // Allow access to Updates page
+    if ($pagenow === 'update-core.php') {
         return;
     }
 
@@ -135,11 +187,6 @@ function redirect_to_custom_dashboard() {
     }
 }
 add_action('admin_init', 'redirect_to_custom_dashboard');
-
-if (defined('WP_DEBUG') && WP_DEBUG) {
-    error_log('Custom Dashboard: Redirect function fired.');
-    error_log('Custom Dashboard: Menu items added.');
-}
 
 // Custom dashboard page content
 function custom_dashboard_content() {
