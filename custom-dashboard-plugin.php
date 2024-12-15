@@ -3,7 +3,7 @@
 Plugin Name: BB Media Core
 Plugin URI: https://bandbmedia.com
 Description: A plugin that provides core functionality for B&B Media websites.
-Version: 1.3.2
+Version: 1.2
 Author: B&B Media, LLC
 Author URI: https://bandbmedia.com
 License: GPLv2 or later
@@ -405,35 +405,63 @@ add_shortcode('bbyear', 'bb_display_current_year');
 
 
 // Hook into plugin update checks
-add_filter('pre_set_site_transient_update_plugins', 'bb_media_core_check_for_updates');
-
 function bb_media_core_check_for_updates($transient) {
     if (empty($transient->checked)) {
+        error_log('No plugins checked in transient.');
         return $transient;
     }
 
-    $plugin_slug = 'bbmediacore'; // Folder name for your plugin
+    $plugin_slug = 'bbmediacore'; // Folder name
+    $plugin_file = 'bbmediacore/custom-dashboard-plugin.php'; // Full file path
     $plugin_data = get_plugin_data(__FILE__);
     $plugin_version = $plugin_data['Version'];
 
-    $remote_url = 'https://api.github.com/repos/bbmediallc/bbmediacore/releases/latest';
-    $response = wp_remote_get($remote_url);
+    error_log('Checking updates for: ' . $plugin_file . ' (current version: ' . $plugin_version . ')');
+
+    // Fetch release data
+    $response = wp_remote_get('https://api.github.com/repos/bbmediallc/bbmediacore/releases/latest');
 
     if (is_wp_error($response)) {
+        error_log('Error fetching release data: ' . $response->get_error_message());
         return $transient;
     }
 
-    $remote = json_decode(wp_remote_retrieve_body($response));
-    if (isset($remote->tag_name) && version_compare($plugin_version, $remote->tag_name, '<')) {
-        $plugin = plugin_basename(__FILE__);
-        $transient->response[$plugin] = (object) [
+    $release = json_decode(wp_remote_retrieve_body($response), true);
+
+    if (!isset($release['tag_name']) || !isset($release['assets'][0]['browser_download_url'])) {
+        error_log('Release data incomplete: ' . print_r($release, true));
+        return $transient;
+    }
+
+    $latest_version = $release['tag_name'];
+    $download_url = $release['assets'][0]['browser_download_url'];
+
+    error_log('Latest version: ' . $latest_version . ', Download URL: ' . $download_url);
+
+    if (version_compare($plugin_version, $latest_version, '<')) {
+        $transient->response[$plugin_file] = (object) [
             'slug'        => $plugin_slug,
-            'plugin'      => $plugin,
-            'new_version' => $remote->tag_name,
-            'package'     => $remote->assets[0]->browser_download_url,
-            'url'         => $remote->html_url,
+            'plugin'      => $plugin_file,
+            'new_version' => $latest_version,
+            'package'     => $download_url,
+            'url'         => $release['html_url'],
         ];
+        error_log('Update available: ' . print_r($transient->response[$plugin_file], true));
+    } else {
+        error_log('No update required.');
     }
 
     return $transient;
 }
+
+
+// Debugging
+add_action('admin_init', function () {
+    $transient = get_site_transient('update_plugins');
+    error_log(print_r($transient, true));
+});
+
+add_action('admin_init', function () {
+    delete_site_transient('update_plugins'); // Clear the cached plugin updates
+    wp_update_plugins(); // Trigger a fresh update check
+});
