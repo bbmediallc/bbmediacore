@@ -3,7 +3,7 @@
 Plugin Name: BB Media Core
 Plugin URI: https://bandbmedia.com
 Description: A plugin that provides core functionality for B&B Media websites.
-Version: 1.2
+Version: 1.4
 Author: B&B Media, LLC
 Author URI: https://bandbmedia.com
 License: GPLv2 or later
@@ -66,53 +66,39 @@ add_action('login_enqueue_scripts', 'custom_login_logo');
 
 // Create a Settings Tab
 function bb_media_settings_page() {
-    // Check if the user has submitted the form to save the token
     if (isset($_POST['bb_media_save_token']) && check_admin_referer('bb_media_save_token_action', 'bb_media_nonce')) {
         $token = sanitize_text_field($_POST['bb_media_license_token']);
-        update_option('bb_media_license_token', $token); // Save the token in the database
+        update_option('bb_media_license_token', $token);
         echo '<div class="updated"><p>Token saved successfully!</p></div>';
     }
 
-    // Check if the user has submitted the form to deactivate the token
     if (isset($_POST['bb_media_deactivate_token']) && check_admin_referer('bb_media_deactivate_token_action', 'bb_media_nonce')) {
-        delete_option('bb_media_license_token'); // Remove the token from the database
+        delete_option('bb_media_license_token');
         echo '<div class="updated"><p>Token deactivated successfully!</p></div>';
     }
 
-    // Retrieve the saved token
     $saved_token = get_option('bb_media_license_token', '');
 
     ?>
     <div class="wrap">
         <h1>B&B Media Plugin Settings</h1>
         <?php if (empty($saved_token)): ?>
-            <!-- Show input field if token is not set -->
             <p>Enter your GitHub token below to enable plugin updates.</p>
             <form method="post">
                 <?php wp_nonce_field('bb_media_save_token_action', 'bb_media_nonce'); ?>
                 <table class="form-table">
                     <tr>
                         <th scope="row"><label for="bb_media_license_token">License Token</label></th>
-                        <td>
-                            <input type="text" name="bb_media_license_token" id="bb_media_license_token" 
-                                   class="regular-text" required />
-                        </td>
+                        <td><input type="text" name="bb_media_license_token" id="bb_media_license_token" class="regular-text" required /></td>
                     </tr>
                 </table>
-                <p class="submit">
-                    <input type="submit" name="bb_media_save_token" id="bb_media_save_token" 
-                           class="button button-primary" value="Save Token">
-                </p>
+                <p class="submit"><input type="submit" name="bb_media_save_token" id="bb_media_save_token" class="button button-primary" value="Save Token"></p>
             </form>
         <?php else: ?>
-            <!-- Show message and deactivate button if token is set -->
             <p>Your token is active and updates are enabled.</p>
             <form method="post">
                 <?php wp_nonce_field('bb_media_deactivate_token_action', 'bb_media_nonce'); ?>
-                <p class="submit">
-                    <input type="submit" name="bb_media_deactivate_token" id="bb_media_deactivate_token" 
-                           class="button button-secondary" value="Deactivate Token">
-                </p>
+                <p class="submit"><input type="submit" name="bb_media_deactivate_token" id="bb_media_deactivate_token" class="button button-secondary" value="Deactivate Token"></p>
             </form>
         <?php endif; ?>
     </div>
@@ -121,66 +107,35 @@ function bb_media_settings_page() {
 
 // Remove default dashboard menu item
 function remove_default_dashboard_menu() {
-    remove_menu_page('index.php'); // Removes "Dashboard"
+    remove_menu_page('index.php');
 }
 add_action('admin_menu', 'remove_default_dashboard_menu', 999);
 
 // Add the custom dashboard and updates page links
 function add_custom_dashboard_page() {
     add_menu_page(
-        'Custom Dashboard',          // Page title
-        'Dashboard',                 // Menu title
-        'manage_options',            // Capability
-        'custom_dashboard',          // Slug
-        'custom_dashboard_content',  // Callback to render content
-        'dashicons-admin-home',      // Icon
-        2                            // Position
+        'Dashboard', 'Dashboard', 'manage_options', 'custom_dashboard', 'custom_dashboard_content', 'dashicons-admin-home', 2
     );
 
-    // Add the settings submenu
     add_submenu_page(
-        'custom_dashboard',          // Parent slug
-        'Settings',                  // Page title
-        'Settings',                  // Menu title
-        'manage_options',            // Capability
-        'bb-media-settings',         // Slug
-        'bb_media_settings_page'     // Callback to render settings page
+        'custom_dashboard', 'Settings', 'Settings', 'manage_options', 'bb-media-settings', 'bb_media_settings_page'
     );
 
-    // Add Updates link
     add_submenu_page(
-        'custom_dashboard',          // Parent slug
-        'WordPress Updates',         // Page title
-        'Updates',                   // Menu title
-        'manage_options',            // Capability
-        'update-core.php',           // Slug (core WP Updates page)
-        null                         // No callback needed, WordPress handles this
+        'custom_dashboard', 'WordPress Updates', 'Updates', 'manage_options', 'update-core.php', null
     );
 }
 add_action('admin_menu', 'add_custom_dashboard_page');
 
-
-// Force redirection from default dashboard to the custom dashboard
 function redirect_to_custom_dashboard() {
     global $pagenow;
 
-    // Skip redirection for specific pages
-    $excluded_pages = [
-        'custom_dashboard',    // Custom dashboard
-        'bb-media-settings',   // Plugin settings
-        'update-core.php'      // WordPress Updates page
-    ];
+    $excluded_pages = ['custom_dashboard', 'bb-media-settings', 'update-core.php'];
 
     if (isset($_GET['page']) && in_array($_GET['page'], $excluded_pages)) {
         return;
     }
 
-    // Allow access to Updates page
-    if ($pagenow === 'update-core.php') {
-        return;
-    }
-
-    // Redirect only from the default dashboard (index.php)
     if ($pagenow === 'index.php' && is_user_logged_in() && current_user_can('manage_options')) {
         wp_redirect(admin_url('admin.php?page=custom_dashboard'));
         exit;
@@ -190,9 +145,8 @@ add_action('admin_init', 'redirect_to_custom_dashboard');
 
 // Custom dashboard page content
 function custom_dashboard_content() {
-    // Get current user info
     $current_user = wp_get_current_user();
-    $first_name = !empty($current_user->user_firstname) ? $current_user->user_firstname : 'there'; // Use 'there' if no first name is set
+    $first_name = !empty($current_user->user_firstname) ? $current_user->user_firstname : 'there';
 
     ?>
     <div class="wrap">
@@ -292,59 +246,61 @@ function handle_support_form_submission() {
 
 // Function to display the latest blog posts with featured images, excerpts, and author names
 function display_latest_blog_posts() {
-    include_once(ABSPATH . WPINC . '/feed.php'); // Load WordPress feed functionality
+    // Fetching the latest 3 blog posts from the REST API
+    $response = wp_remote_get('https://bandbmedia.com/wp-json/wp/v2/posts?_embed&per_page=3');
 
-    $feed_url = 'https://bandbmedia.com/feed/';
-    $feed = fetch_feed($feed_url);
-
-    if (is_wp_error($feed)) {
-        return '<p>Unable to fetch blog posts at this time.</p>';
+    // Check if the request was successful
+    if (is_wp_error($response)) {
+        // Output error message if request fails
+        $error_message = $response->get_error_message();
+        return '<p>Unable to fetch blog posts at this time. Error: ' . $error_message . '</p>';
     }
 
-    $feed_items = $feed->get_items(0, 3); // Get the latest 3 items
+    // Decode the API response
+    $posts = json_decode(wp_remote_retrieve_body($response));
 
-    if (empty($feed_items)) {
+    // If no posts are returned or the response is empty
+    if (empty($posts)) {
         return '<p>No recent posts found.</p>';
     }
 
     $output = '<ul class="latest-blog-posts">';
-    foreach ($feed_items as $item) {
-        $title = esc_html($item->get_title());
-        $link = esc_url($item->get_permalink());
-        $date = $item->get_date('F j, Y');
+    foreach ($posts as $post) {
+        // Extract post details
+        $title = esc_html($post->title->rendered);
+        $link = esc_url($post->link);
+        $date = date('F j, Y', strtotime($post->date));
 
-        // Fetch the post ID from the feed URL
-        $post_id = url_to_postid($link);
+        // Fetch the author's details using the _embedded property
+        if (isset($post->_embedded->author[0]->name)) {
+            $author_name = esc_html($post->_embedded->author[0]->name);
+        } else {
+            $author_name = 'The B&B Media Team'; // Fallback if author name is not found
+        }
 
-        // Get the author name
-        $author = $post_id ? get_the_author_meta('display_name', get_post_field('post_author', $post_id)) : 'Unknown Author';
+        // Get the featured image URL from embedded data
+        $featured_image_url = isset($post->_embedded->{'wp:featuredmedia'}[0]->source_url) ? esc_url($post->_embedded->{'wp:featuredmedia'}[0]->source_url) : '';
 
-        // Get the featured image ID
-        $featured_image_id = get_post_thumbnail_id($post_id);
+        // Extract the post excerpt
+        $excerpt = wp_trim_words($post->excerpt->rendered, 20, '...');
 
-        // Get the 300x300 cropped image size
-        $featured_image_url = wp_get_attachment_image_url($featured_image_id, 'custom-300x300'); // Custom size
-
-        // Get the excerpt and trim it to 100 characters
-        $excerpt = get_the_excerpt($post_id);
-        $excerpt = wp_trim_words($excerpt, 20, '...'); // Limit to 20 words (approx. 100 characters)
-
-        // Add a "Continue Reading" link
+        // Add the "Continue Reading" link
         $continue_reading_link = "<a href='{$link}' target='_blank' class='continue-reading'>Continue Reading</a>";
 
+        // Construct the HTML output
         $output .= "<li class='blog-post-item'>";
         $output .= "<div class='blog-post-content'>";
 
-        // Image on the left (33%) - Now as a background
+        // If a featured image exists, display it as a background
         if ($featured_image_url) {
             $output .= "<div class='post-image' style='background-image: url({$featured_image_url});'></div>";
         }
 
-        // Title, Date, Author, and Excerpt on the right (67%)
+        // Title, Date, Author, and Excerpt
         $output .= "<div class='post-details'>";
         $output .= "<a href='{$link}' target='_blank' class='post-title'>{$title}</a>";
-        $output .= "<span class='post-date'>{$date} by {$author}</span>";
-        $output .= "<p class='excerpt'>{$excerpt} {$continue_reading_link}</p>"; // Display the excerpt with Continue Reading link
+        $output .= "<span class='post-date'>{$date} by {$author_name}</span>";
+        $output .= "<p class='excerpt'>{$excerpt} {$continue_reading_link}</p>";
         $output .= "</div>"; // End of post-details
         $output .= "</div>"; // End of blog-post-content
         $output .= "</li>";
@@ -354,7 +310,7 @@ function display_latest_blog_posts() {
     return $output;
 }
 
-// Register shortcode to display the latest blog posts
+// Register the shortcode to display the latest blog posts
 function register_blog_feed_shortcode() {
     add_shortcode('latest_blog_posts', 'display_latest_blog_posts');
 }
@@ -377,9 +333,9 @@ function enqueue_submit_lock_script() {
     wp_enqueue_script(
         'submit-lock',
         plugin_dir_url(__FILE__) . 'js/submit-lock.js',
-        ['jquery'], // Dependency
-        '1.1', // Version
-        true // Load in footer
+        ['jquery'], 
+        '1.1',
+        true
     );
 }
 add_action('admin_enqueue_scripts', 'enqueue_submit_lock_script');
@@ -397,12 +353,9 @@ add_action('admin_head', 'hide_admin_notices_on_custom_dashboard');
 
 // Auto-update copyright year
 function bb_display_current_year($atts, $content = null) {
-    return date('Y'); // Returns the current year
+    return date('Y');
 }
 add_shortcode('bbyear', 'bb_display_current_year');
-
-
-
 
 // Hook into plugin update checks
 function bb_media_core_check_for_updates($transient) {
@@ -419,7 +372,14 @@ function bb_media_core_check_for_updates($transient) {
     error_log('Checking updates for: ' . $plugin_file . ' (current version: ' . $plugin_version . ')');
 
     // Fetch release data
-    $response = wp_remote_get('https://api.github.com/repos/bbmediallc/bbmediacore/releases/latest');
+    $response = wp_remote_get(
+        'https://api.github.com/repos/bbmediallc/bbmediacore/releases/latest',
+        [
+            'headers' => [
+                'Authorization' => 'token ' . get_option('bb_media_license_token'),
+            ],
+        ]
+    );
 
     if (is_wp_error($response)) {
         error_log('Error fetching release data: ' . $response->get_error_message());
@@ -453,15 +413,3 @@ function bb_media_core_check_for_updates($transient) {
 
     return $transient;
 }
-
-
-// Debugging
-add_action('admin_init', function () {
-    $transient = get_site_transient('update_plugins');
-    error_log(print_r($transient, true));
-});
-
-add_action('admin_init', function () {
-    delete_site_transient('update_plugins'); // Clear the cached plugin updates
-    wp_update_plugins(); // Trigger a fresh update check
-});
