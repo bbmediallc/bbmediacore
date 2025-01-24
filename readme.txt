@@ -38,36 +38,3 @@ Yes, but you may need to adjust branding elements like logos and links to suit y
 
 = Does this plugin work on all WordPress versions? =
 This plugin has been tested on WordPress 5.6 and higher. Ensure your WordPress and PHP versions meet the requirements.
-
-== Changelog ==
-
-= 1.1 =
-* Added a support form for clients to submit tickets.
-* Enhanced the custom dashboard with blog post feed integration.
-* Improved compatibility with the latest WordPress version.
-
-= 1.0 =
-* Initial release with admin footer branding and custom dashboard.
-
-== Upgrade Notice ==
-
-= 1.1 =
-This update includes a support form and blog feed integration. Please update to ensure the latest features are available.
-
-== Screenshots ==
-
-1. **Custom Dashboard**  
-   A personalized admin dashboard for easier navigation.
-
-2. **Custom Login Screen**  
-   A branded login screen for your agency or clients.
-
-3. **Support Form**  
-   Submit support tickets directly from the admin dashboard.
-
-== License ==
-
-This plugin is licensed under the GPLv2 or later. See the [License URI](https://www.gnu.org/licenses/gpl-2.0.html) for details.
-
-== Tags ==
-core functionality, admin, custom dashboard, support form
