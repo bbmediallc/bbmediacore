@@ -1,7 +1,7 @@
 /*
 Plugin Name: BB Media Core
 Description: Custom CSS for the BB Media Core plugin.
-Version: 1.1
+Version: 1.5.1
 Author: B&B Media, LLC
 */
 
@@ -103,13 +103,13 @@ custom-dashboard-layout p {
     padding: 25px;
     border-top: solid 4px #35479d;
     box-shadow: 0 0 20px #00000021;
+    column-gap: 20px;
 }
 
 .post-image {
     width: 33%;
-    padding-right: 15px; 
     height: 0;
-    padding-bottom: 35%;
+    padding-bottom: 30%;
     background-size: cover;
     background-position: 50%;
 }
@@ -160,6 +160,7 @@ custom-dashboard-layout p {
     flex-direction: row;
     flex-wrap: nowrap;
     column-gap: 25px;
+    width: 100%;
 }
 
 @media(min-width: 1300px){
