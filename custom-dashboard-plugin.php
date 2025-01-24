@@ -1,9 +1,9 @@
 <?php
 /*
 Plugin Name: BB Media Core
-Plugin URI: https://bandbmedia.com
+Plugin URI: https://github.com/bbmediallc/bbmediacore
 Description: A plugin that provides core functionality for B&B Media websites.
-Version: 1.4
+Version: 1.5
 Author: B&B Media, LLC
 Author URI: https://bandbmedia.com
 License: GPLv2 or later
@@ -11,12 +11,14 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
 */
 
 // Admin footer modification
+
 function swp_modify_footer_admin() {
     echo '<span id="footer-thankyou">Powered by <a href="https://bandbmedia.com" target="_blank">B&B Media</a></span>';
 }
 add_filter('admin_footer_text', 'swp_modify_footer_admin');
 
 // Replace WordPress login logo
+
 function custom_login_logo() {
     ?>
     <style type="text/css">
@@ -65,6 +67,7 @@ function custom_login_logo() {
 add_action('login_enqueue_scripts', 'custom_login_logo');
 
 // Create a Settings Tab
+
 function bb_media_settings_page() {
     if (isset($_POST['bb_media_save_token']) && check_admin_referer('bb_media_save_token_action', 'bb_media_nonce')) {
         $token = sanitize_text_field($_POST['bb_media_license_token']);
@@ -106,12 +109,14 @@ function bb_media_settings_page() {
 }
 
 // Remove default dashboard menu item
+
 function remove_default_dashboard_menu() {
     remove_menu_page('index.php');
 }
 add_action('admin_menu', 'remove_default_dashboard_menu', 999);
 
 // Add the custom dashboard and updates page links
+
 function add_custom_dashboard_page() {
     add_menu_page(
         'Dashboard', 'Dashboard', 'manage_options', 'custom_dashboard', 'custom_dashboard_content', 'dashicons-admin-home', 2
@@ -144,6 +149,7 @@ function redirect_to_custom_dashboard() {
 add_action('admin_init', 'redirect_to_custom_dashboard');
 
 // Custom dashboard page content
+
 function custom_dashboard_content() {
     $current_user = wp_get_current_user();
     $first_name = !empty($current_user->user_firstname) ? $current_user->user_firstname : 'there';
@@ -182,11 +188,8 @@ function custom_dashboard_content() {
 }
 
 // Display the support form
-function display_support_form() {
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_ticket'])) {
-        handle_support_form_submission();
-    }
 
+function display_support_form() {
     ?>
     <form id="support-form" method="post" action="<?php echo esc_url(admin_url('admin-ajax.php')); ?>">
         <?php wp_nonce_field('support_form_action', 'support_form_nonce'); ?>
@@ -226,12 +229,14 @@ function handle_support_form_submission() {
     }
 
     // Retrieve and sanitize form data
+
     $full_name = sanitize_text_field($_POST['full_name']);
     $email_address = sanitize_email($_POST['email_address']);
     $urgency = intval($_POST['urgency']);
     $description = sanitize_textarea_field($_POST['description']);
 
     // Attempt to send the email
+
     $to = 'support@bandbmedia.com';
     $subject = 'New Support Ticket';
     $message = "Name: $full_name\nEmail: $email_address\nUrgency: $urgency\nDescription: $description";
@@ -245,65 +250,38 @@ function handle_support_form_submission() {
 }
 
 // Function to display the latest blog posts with featured images, excerpts, and author names
+
 function display_latest_blog_posts() {
     // Fetching the latest 3 blog posts from the REST API
+
     $response = wp_remote_get('https://bandbmedia.com/wp-json/wp/v2/posts?_embed&per_page=3');
 
     // Check if the request was successful
+
     if (is_wp_error($response)) {
-        // Output error message if request fails
-        $error_message = $response->get_error_message();
-        return '<p>Unable to fetch blog posts at this time. Error: ' . $error_message . '</p>';
+        return '<p>Unable to fetch blog posts at this time. Please try again later.</p>';
     }
 
-    // Decode the API response
     $posts = json_decode(wp_remote_retrieve_body($response));
 
-    // If no posts are returned or the response is empty
     if (empty($posts)) {
         return '<p>No recent posts found.</p>';
     }
 
     $output = '<ul class="latest-blog-posts">';
     foreach ($posts as $post) {
-        // Extract post details
         $title = esc_html($post->title->rendered);
         $link = esc_url($post->link);
         $date = date('F j, Y', strtotime($post->date));
-
-        // Fetch the author's details using the _embedded property
-        if (isset($post->_embedded->author[0]->name)) {
-            $author_name = esc_html($post->_embedded->author[0]->name);
-        } else {
-            $author_name = 'The B&B Media Team'; // Fallback if author name is not found
-        }
-
-        // Get the featured image URL from embedded data
+        $author_name = isset($post->_embedded->author[0]->name) ? esc_html($post->_embedded->author[0]->name) : 'The B&B Media Team';
         $featured_image_url = isset($post->_embedded->{'wp:featuredmedia'}[0]->source_url) ? esc_url($post->_embedded->{'wp:featuredmedia'}[0]->source_url) : '';
-
-        // Extract the post excerpt
         $excerpt = wp_trim_words($post->excerpt->rendered, 20, '...');
 
-        // Add the "Continue Reading" link
-        $continue_reading_link = "<a href='{$link}' target='_blank' class='continue-reading'>Continue Reading</a>";
-
-        // Construct the HTML output
         $output .= "<li class='blog-post-item'>";
-        $output .= "<div class='blog-post-content'>";
-
-        // If a featured image exists, display it as a background
-        if ($featured_image_url) {
-            $output .= "<div class='post-image' style='background-image: url({$featured_image_url});'></div>";
-        }
-
-        // Title, Date, Author, and Excerpt
-        $output .= "<div class='post-details'>";
-        $output .= "<a href='{$link}' target='_blank' class='post-title'>{$title}</a>";
+        $output .= $featured_image_url ? "<div class='post-image' style='background-image: url({$featured_image_url});'></div>" : '';
+        $output .= "<div class='post-details'><a href='{$link}' target='_blank' class='post-title'>{$title}</a>";
         $output .= "<span class='post-date'>{$date} by {$author_name}</span>";
-        $output .= "<p class='excerpt'>{$excerpt} {$continue_reading_link}</p>";
-        $output .= "</div>"; // End of post-details
-        $output .= "</div>"; // End of blog-post-content
-        $output .= "</li>";
+        $output .= "<p class='excerpt'>{$excerpt} <a href='{$link}' target='_blank' class='continue-reading'>Continue Reading</a></p></div></li>";
     }
     $output .= '</ul>';
 
@@ -311,25 +289,26 @@ function display_latest_blog_posts() {
 }
 
 // Register the shortcode to display the latest blog posts
+
 function register_blog_feed_shortcode() {
     add_shortcode('latest_blog_posts', 'display_latest_blog_posts');
 }
 add_action('init', 'register_blog_feed_shortcode');
 
 // Enqueue custom CSS for the custom dashboard
+
 function enqueue_custom_dashboard_styles() {
     wp_enqueue_style('custom-dashboard-css', plugin_dir_url(__FILE__) . 'css/styles.css');
 }
 add_action('admin_enqueue_scripts', 'enqueue_custom_dashboard_styles');
 
 // Load jQuery and Enqueue Submit Lock
+
 function enqueue_submit_lock_script() {
-    // Ensure jQuery is loaded before your script
     if (!wp_script_is('jquery', 'enqueued')) {
         wp_enqueue_script('jquery');
     }
 
-    // Enqueue the submit-lock script
     wp_enqueue_script(
         'submit-lock',
         plugin_dir_url(__FILE__) . 'js/submit-lock.js',
@@ -340,8 +319,8 @@ function enqueue_submit_lock_script() {
 }
 add_action('admin_enqueue_scripts', 'enqueue_submit_lock_script');
 
-
 // Suppress WordPress admin notices and alerts
+
 function hide_admin_notices_on_custom_dashboard() {
     $screen = get_current_screen();
     if ($screen && $screen->id === 'toplevel_page_custom_dashboard') {
@@ -352,26 +331,25 @@ function hide_admin_notices_on_custom_dashboard() {
 add_action('admin_head', 'hide_admin_notices_on_custom_dashboard');
 
 // Auto-update copyright year
+
 function bb_display_current_year($atts, $content = null) {
     return date('Y');
 }
 add_shortcode('bbyear', 'bb_display_current_year');
 
+
 // Hook into plugin update checks
+
 function bb_media_core_check_for_updates($transient) {
     if (empty($transient->checked)) {
-        error_log('No plugins checked in transient.');
         return $transient;
     }
 
-    $plugin_slug = 'bbmediacore'; // Folder name
-    $plugin_file = 'bbmediacore/custom-dashboard-plugin.php'; // Full file path
+    $plugin_slug = 'bbmediacore';
+    $plugin_file = 'bbmediacore/custom-dashboard-plugin.php';
     $plugin_data = get_plugin_data(__FILE__);
     $plugin_version = $plugin_data['Version'];
 
-    error_log('Checking updates for: ' . $plugin_file . ' (current version: ' . $plugin_version . ')');
-
-    // Fetch release data
     $response = wp_remote_get(
         'https://api.github.com/repos/bbmediallc/bbmediacore/releases/latest',
         [
@@ -382,34 +360,31 @@ function bb_media_core_check_for_updates($transient) {
     );
 
     if (is_wp_error($response)) {
-        error_log('Error fetching release data: ' . $response->get_error_message());
         return $transient;
     }
 
     $release = json_decode(wp_remote_retrieve_body($response), true);
 
     if (!isset($release['tag_name']) || !isset($release['assets'][0]['browser_download_url'])) {
-        error_log('Release data incomplete: ' . print_r($release, true));
         return $transient;
     }
 
-    $latest_version = $release['tag_name'];
+    $latest_version = ltrim($release['tag_name'], 'v');
     $download_url = $release['assets'][0]['browser_download_url'];
 
-    error_log('Latest version: ' . $latest_version . ', Download URL: ' . $download_url);
-
     if (version_compare($plugin_version, $latest_version, '<')) {
-        $transient->response[$plugin_file] = (object) [
+        $update = (object) [
             'slug'        => $plugin_slug,
             'plugin'      => $plugin_file,
             'new_version' => $latest_version,
             'package'     => $download_url,
             'url'         => $release['html_url'],
         ];
-        error_log('Update available: ' . print_r($transient->response[$plugin_file], true));
-    } else {
-        error_log('No update required.');
+
+        $transient->response[$plugin_file] = $update;
     }
 
     return $transient;
 }
+
+add_filter('site_transient_update_plugins', 'bb_media_core_check_for_updates', 99);
