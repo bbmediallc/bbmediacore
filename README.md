@@ -12,7 +12,7 @@ plugin/                      Everything that ships. Becomes bbmediacore/ in the 
   custom-dashboard-plugin.php  Main file: version number and loader. Never rename.
   readme.txt                   WordPress readme (keep "Stable tag" in sync).
   includes/                    The PHP, one file per feature.
-  brands/<id>/                 One folder per company: brand.json, logo, icon.
+  brands/<id>/                 One folder per company: brand.php, logo, icon.
   assets/                      CSS, JavaScript and the shared login photo.
 scripts/build.sh             Builds dist/bbmediacore.zip.
 .github/workflows/           Checks the code and publishes releases on GitHub.
@@ -88,9 +88,9 @@ To build the zip yourself: `bash scripts/build.sh` (output in `dist/`).
 On one site: Dashboard > Brand Settings > Add a company.
 
 For every site: open that company in Brand Settings, copy the text at the
-bottom, save it as `plugin/brands/<id>/brand.json`, add its `logo` and
-`menu_icon` files to the same folder (file names only in the JSON, e.g.
-`"logo": "logo.svg"`), and release an update.
+bottom, save it as `plugin/brands/<id>/brand.php`, add its `logo` and
+`menu_icon` files to the same folder (file names only in that file, e.g.
+`'logo' => 'logo.svg'`), and release an update.
 
 ## Things that must not change
 

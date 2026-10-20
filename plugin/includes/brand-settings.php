@@ -344,8 +344,8 @@ function bbcore_render_brand_editor($slug) {
     <?php if (!$is_new) : ?>
         <div class="bbcore-card">
             <h2>Use this company on every site</h2>
-            <p>Changes saved here only apply to this site. To ship this company with the plugin, save this text as <code>brands/<?php echo esc_html($slug); ?>/brand.json</code> in the codebase, put its logo and icon files in the same folder, and release an update.</p>
-            <textarea class="large-text code" rows="12" readonly onclick="this.select()"><?php echo esc_textarea(bbcore_brand_json($brand)); ?></textarea>
+            <p>Changes saved here only apply to this site. To ship this company with the plugin, save this text as <code>brands/<?php echo esc_html($slug); ?>/brand.php</code> in the codebase, put its logo and icon files in the same folder, and release an update.</p>
+            <textarea class="large-text code" rows="12" readonly onclick="this.select()"><?php echo esc_textarea(bbcore_brand_file_contents($brand)); ?></textarea>
         </div>
     <?php endif;
 }

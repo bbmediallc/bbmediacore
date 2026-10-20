@@ -2,9 +2,9 @@
 Contributors: bandbmedia, austinbollinger
 Tags: core functionality, admin, custom dashboard, support form, white label
 Requires at least: 5.0
-Tested up to: 6.9
+Tested up to: 7.1
 Requires PHP: 5.6
-Stable tag: 2.0.2
+Stable tag: 2.0.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,6 +34,12 @@ Only the support@bandbmedia.com account can choose the company or change brand s
 Sites updating from BB Media Core 1.6.x are set to B&B Media automatically.
 
 == Changelog ==
+
+= 2.0.3 =
+* Fixed: other plugins' screens at /wp-admin/?... (WooCommerce email preview, Gravity Forms column picker) no longer redirect to the dashboard.
+* WooCommerce customers no longer get the custom dashboard or support form.
+* Company settings files can no longer be read in a browser.
+* Tested up to WordPress 7.1.
 
 = 2.0.2 =
 * Update screens always show the B&B Media icon.

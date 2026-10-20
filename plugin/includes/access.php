@@ -28,11 +28,12 @@ function bbcore_is_brand_admin() {
     return in_array(strtolower($user->user_email), bbcore_admin_emails(), true);
 }
 
-// Everyone logged in except subscribers gets the custom dashboard.
+// Everyone logged in except subscribers and WooCommerce customers gets the
+// custom dashboard and support form.
 function bbcore_can_access_dashboard() {
     if (!is_user_logged_in()) {
         return false;
     }
     $user = wp_get_current_user();
-    return !in_array('subscriber', (array) $user->roles, true);
+    return !array_intersect(array('subscriber', 'customer'), (array) $user->roles);
 }

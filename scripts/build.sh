@@ -28,9 +28,8 @@ if [ $# -gt 0 ] && [ "${1#v}" != "$header_version" ]; then
     exit 1
 fi
 
-for brand_json in plugin/brands/*/brand.json; do
-    python3 -c 'import json,sys; json.load(open(sys.argv[1]))' "$brand_json" \
-        || { echo "Invalid JSON: $brand_json" >&2; exit 1; }
+for brand_dir in plugin/brands/*/; do
+    [ -f "$brand_dir/brand.php" ] || { echo "Missing $brand_dir/brand.php" >&2; exit 1; }
 done
 
 rm -rf dist

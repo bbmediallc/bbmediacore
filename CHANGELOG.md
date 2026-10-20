@@ -2,6 +2,23 @@
 
 Each `## [version]` section becomes the release notes on GitHub.
 
+## [2.0.3] - 2026-10-20
+
+### Fixed
+- Screens other plugins open at `/wp-admin/?...` (WooCommerce's email
+  preview, Gravity Forms' entry column picker) were sent to the custom
+  dashboard. Only a plain visit to `/wp-admin/` is redirected now.
+- WooCommerce customers were offered the custom dashboard and support
+  form. They now get neither, and the support form rejects their tickets.
+
+### Security
+- Company settings files are now `brands/<id>/brand.php` instead of
+  `brand.json`, so visitors can't open them in a browser to read the
+  support email addresses.
+
+### Changed
+- Tested up to WordPress 7.1.
+
 ## [2.0.2] - 2026-10-20
 
 ### Changed

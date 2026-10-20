@@ -47,12 +47,14 @@ add_action('admin_menu', 'bbcore_add_dashboard_page');
 function bbcore_redirect_to_dashboard() {
     global $pagenow;
 
-    // Do not redirect during WooCommerce email preview.
-    if (isset($_GET['preview_woocommerce_mail'])) {
+    // Only a plain visit to /wp-admin/ or index.php. Other plugins open their
+    // own screens at /wp-admin/?something (WooCommerce's email preview,
+    // Gravity Forms' column picker), and redirecting those breaks them.
+    if ($pagenow !== 'index.php' || !empty($_GET) || $_SERVER['REQUEST_METHOD'] !== 'GET') {
         return;
     }
 
-    if ($pagenow === 'index.php' && !isset($_GET['page']) && bbcore_can_access_dashboard()) {
+    if (bbcore_can_access_dashboard()) {
         wp_safe_redirect(admin_url('admin.php?page=custom_dashboard'));
         exit;
     }

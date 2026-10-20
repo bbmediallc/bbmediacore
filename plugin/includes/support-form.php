@@ -41,6 +41,10 @@ function bbcore_handle_support_ticket() {
     if (!isset($_POST['support_form_nonce']) || !wp_verify_nonce($_POST['support_form_nonce'], 'support_form_action')) {
         wp_send_json_error(array('message' => 'Security check failed.'));
     }
+    // Same people who can see the form (not subscribers or WooCommerce customers).
+    if (!bbcore_can_access_dashboard()) {
+        wp_send_json_error(array('message' => 'You do not have permission to submit support tickets.'));
+    }
 
     $full_name = isset($_POST['full_name']) ? sanitize_text_field(wp_unslash($_POST['full_name'])) : '';
     $email_address = isset($_POST['email_address']) ? sanitize_email(wp_unslash($_POST['email_address'])) : '';

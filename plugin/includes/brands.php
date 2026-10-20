@@ -1,12 +1,13 @@
 <?php
 // Brand registry.
 //
-// Built-in brands live in brands/<slug>/brand.json and ship with every
+// Built-in brands live in brands/<slug>/brand.php and ship with every
 // release. Edits made in Brand Settings are saved per site in the
 // bbcore_brands option: for a built-in brand only the changed fields are
 // stored, so "Reset to defaults" just deletes them. Brands added in
-// Brand Settings exist only on that site until their exported JSON is
-// committed as a new brands/<slug>/brand.json.
+// Brand Settings exist only on that site until their exported settings
+// are committed as a new brands/<slug>/brand.php. (PHP rather than JSON so
+// visitors who open the file in a browser see nothing.)
 
 if (!defined('ABSPATH')) {
     exit;
@@ -62,9 +63,9 @@ function bbcore_builtin_brands() {
         return $brands;
     }
     $brands = array();
-    $files = glob(BBCORE_DIR . 'brands/*/brand.json');
+    $files = glob(BBCORE_DIR . 'brands/*/brand.php');
     foreach ($files ? $files : array() as $file) {
-        $data = json_decode(file_get_contents($file), true);
+        $data = include $file;
         if (is_array($data)) {
             $brands[basename(dirname($file))] = $data;
         }
@@ -203,7 +204,7 @@ function bbcore_sanitize_brand_values($input) {
 }
 
 // Saves a brand. For built-in brands only the fields that differ from the
-// bundled brand.json are stored.
+// bundled brand.php are stored.
 function bbcore_save_brand($slug, $values) {
     $saved = bbcore_saved_brands();
     $builtin = bbcore_builtin_brands();
@@ -234,12 +235,15 @@ function bbcore_delete_saved_brand($slug) {
     update_option('bbcore_brands', $saved);
 }
 
-// The brand as brand.json text, for adding it to the codebase.
-function bbcore_brand_json($brand) {
-    $values = array();
+// The brand as the text of a brand.php file, for adding it to the codebase.
+function bbcore_brand_file_contents($brand) {
+    $lines = array();
     foreach (array_keys(bbcore_brand_fields()) as $key) {
-        $values[$key] = $brand[$key];
+        $lines[] = '    ' . var_export($key, true) . ' => ' . var_export((string) $brand[$key], true) . ',';
     }
-    $flags = defined('JSON_PRETTY_PRINT') ? JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES : 0;
-    return json_encode($values, $flags);
+    return "<?php\n"
+        . '// ' . str_replace(array("\r", "\n", '?>'), ' ', $brand['name']) . " brand settings. A PHP file so the web server runs it\n"
+        . "// instead of showing its contents (support emails etc.) to visitors.\n\n"
+        . "if (!defined('ABSPATH')) {\n    exit;\n}\n\n"
+        . "return array(\n" . implode("\n", $lines) . "\n);\n";
 }
