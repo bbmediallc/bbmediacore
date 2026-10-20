@@ -1,0 +1,80 @@
+/*
+Plugin Name: BB Media Core
+Description: Custom CSS for the BB Media Core plugin.
+Version: 1.6.6
+Author: B&B Media, LLC
+*/
+
+/* WordPress Login Page Styles */
+body.login div#login h1 a {
+    background-image: url("../images/logo.png") !important; 
+    background-size: contain !important;
+    width: 320px !important;
+    height: 80px !important;
+}
+
+body.login {
+    background: url("../images/login-bg.jpg") !important;
+    background-size: cover !important;
+    background-position: 50% !important;
+}
+
+.login form {
+    border: unset !important;
+}
+
+div#login {
+    background: #ffffff !important;
+    padding: 25px !important;
+    border-top: solid 4px #35479d !important;
+    box-shadow: 0 0 40px #36489d !important;
+    position: absolute !important;
+    top: 25% !important;
+    transform: translate(-50%, -25%) !important;
+    left: 50% !important;
+}
+
+.wp-core-ui #login .wp-generate-pw, .wp-core-ui #login .button-primary, body.wp-core-ui #login .two-factor-email-resend .button {
+    background: #33469d !important;
+    transition: ease all .25s !important;
+}
+
+.wp-core-ui #login .wp-generate-pw:hover, .wp-core-ui #login .button-primary:hover, body.wp-core-ui #login .two-factor-email-resend .button:hover {
+    background: #2fc1e0 !important;
+    Border-color: #2fc1e0 !important;
+    transition: ease all .25s !important;
+}
+
+body.login:before {
+    content: "" !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background-color: transparent !important;
+    background-image: linear-gradient(-45deg, #26c2e0 1%, #35479d 100%) !important;
+    opacity: .9 !important;
+}
+
+body.login {
+    height: 100% !important;
+}
+
+#wp-submit {
+    background: #2271b1 !important;
+    border-color: #2271b1 !important;
+    color: #fff !important;
+    text-decoration: none !important;
+    text-shadow: none !important;
+}
+
+#wp-submit:hover {
+    background: #135e96 !important;
+    border-color: #135e96 !important;
+    color: #fff !important;
+}
+
+.login #nav, #backtoblog {
+    float: unset !important;
+}
