@@ -10,3 +10,4 @@ Read README.md first. It is the source of truth for layout and releases.
 - Anything that differs between companies belongs in `bbcore_brand_fields()` (includes/brands.php) and each `brands/*/brand.json`, never hard-coded.
 - A release means bumping the version in three places (see README), adding a CHANGELOG section, then tagging `vX.Y.Z`. `scripts/build.sh` enforces that the versions match.
 - PHP is not installed on Austin's Mac. Rely on CI for linting, and ask before testing on a live site.
+- Releases reach sites only while the GitHub repo is public; Austin manages its visibility by hand. Never change it yourself. Test releases use a `-beta.N` tag (published as a pre-release) and reach only sites with `BBCORE_UPDATE_CHANNEL` set to 'beta'.

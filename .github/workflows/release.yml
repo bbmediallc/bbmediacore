@@ -52,6 +52,10 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           version="${GITHUB_REF_NAME#v}"
+          # Tags like v1.7.0-beta.1 become pre-releases: only sites with
+          # BBCORE_UPDATE_CHANNEL set to 'beta' are offered them.
+          prerelease=""
+          if [[ "$version" == *-* ]]; then prerelease="--prerelease"; fi
           # Release notes are this version's section of CHANGELOG.md.
           awk -v v="$version" '
             $0 ~ "^## \\[?" v "\\]?" { found=1; next }
@@ -59,7 +63,7 @@ jobs:
             found { print }
           ' CHANGELOG.md > notes.md
           if [ -s notes.md ]; then
-            gh release create "$GITHUB_REF_NAME" dist/bbmediacore.zip --title "$GITHUB_REF_NAME" --notes-file notes.md
+            gh release create "$GITHUB_REF_NAME" dist/bbmediacore.zip --title "$GITHUB_REF_NAME" $prerelease --notes-file notes.md
           else
-            gh release create "$GITHUB_REF_NAME" dist/bbmediacore.zip --title "$GITHUB_REF_NAME" --generate-notes
+            gh release create "$GITHUB_REF_NAME" dist/bbmediacore.zip --title "$GITHUB_REF_NAME" $prerelease --generate-notes
           fi

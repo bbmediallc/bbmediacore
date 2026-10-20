@@ -23,6 +23,9 @@ company added later). It replaces the separate `knccore` and `pacecore` plugins.
 - Sites running the one-off ACF tutorials version have their videos copied
   over automatically, with tutorials turned on.
 - New brand color "Accent" (tutorial icons).
+- Test channel: sites with `define('BBCORE_UPDATE_CHANNEL', 'beta');` in
+  wp-config.php are also offered pre-release versions (tags like
+  `v1.7.0-beta.1`). All other sites ignore them.
 - Support ticket emails include the site's address.
 - The login logo links to the company's website instead of wordpress.org.
 
@@ -38,7 +41,9 @@ company added later). It replaces the separate `knccore` and `pacecore` plugins.
 - Update check compared against a hard-coded "1.6.5" instead of the
   installed version.
 - Update check called GitHub every time WordPress read its update list.
-  It now runs only when WordPress refreshes updates, cached for 6 hours.
+  It now runs only when WordPress refreshes updates, cached for 1 hour
+  (10 minutes after a failed check). Dashboard > Updates > "Check again"
+  always asks GitHub fresh.
 - Removed the after-update "reactivate" step, which could never run: a
   deactivated plugin's code isn't loaded.
 - Support form no longer accepts submissions from logged-out visitors.

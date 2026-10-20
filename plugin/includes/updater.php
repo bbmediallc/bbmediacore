@@ -4,54 +4,103 @@
 // Each release on github.com/bbmediallc/bbmediacore must have a
 // bbmediacore.zip asset (scripts/build.sh makes it, and the GitHub Action
 // attaches it). WordPress shows the update like any other plugin update.
+//
+// Sites can only see releases while the repository is public. Austin keeps
+// it private and makes it public only while rolling out an update, so
+// results are cached briefly, and Dashboard > Updates > "Check again"
+// always asks GitHub fresh.
+//
+// Test versions (tags like v1.7.0-beta.1, published as GitHub pre-releases)
+// are offered only to sites with this line in wp-config.php:
+//   define('BBCORE_UPDATE_CHANNEL', 'beta');
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
-define('BBCORE_RELEASE_CACHE', 'bbcore_latest_release');
+function bbcore_update_channel() {
+    return defined('BBCORE_UPDATE_CHANNEL') && BBCORE_UPDATE_CHANNEL === 'beta' ? 'beta' : 'stable';
+}
 
-// Latest release info from GitHub, cached for 6 hours (1 hour after a failure)
-// so 200+ sites don't hit GitHub's rate limit.
-function bbcore_latest_release() {
-    $cached = get_site_transient(BBCORE_RELEASE_CACHE);
-    if ($cached !== false) {
-        return $cached ? $cached : null;
+function bbcore_release_cache_key() {
+    return 'bbcore_release_' . bbcore_update_channel();
+}
+
+// A GitHub release as the fields we need, or null if it has no bbmediacore.zip.
+function bbcore_parse_release($body) {
+    if (!is_array($body) || empty($body['tag_name']) || !empty($body['draft'])) {
+        return null;
     }
+    $package = '';
+    foreach (isset($body['assets']) ? (array) $body['assets'] : array() as $asset) {
+        if (isset($asset['name']) && $asset['name'] === 'bbmediacore.zip') {
+            $package = $asset['browser_download_url'];
+        }
+    }
+    if ($package === '') {
+        return null;
+    }
+    return array(
+        'version' => ltrim($body['tag_name'], 'vV'),
+        'package' => $package,
+        'url' => isset($body['html_url']) ? $body['html_url'] : '',
+        'notes' => isset($body['body']) ? $body['body'] : '',
+        'published' => isset($body['published_at']) ? $body['published_at'] : '',
+    );
+}
 
-    $response = wp_remote_get('https://api.github.com/repos/' . BBCORE_GITHUB_REPO . '/releases/latest', array(
+function bbcore_github_get($path) {
+    $response = wp_remote_get('https://api.github.com/repos/' . BBCORE_GITHUB_REPO . $path, array(
         'timeout' => 10,
         'headers' => array(
             'Accept' => 'application/vnd.github+json',
             'User-Agent' => 'WordPress/' . get_bloginfo('version') . '; ' . home_url(),
         ),
     ));
+    if (is_wp_error($response) || wp_remote_retrieve_response_code($response) !== 200) {
+        return null;
+    }
+    return json_decode(wp_remote_retrieve_body($response), true);
+}
 
-    $release = null;
-    if (!is_wp_error($response) && wp_remote_retrieve_response_code($response) === 200) {
-        $body = json_decode(wp_remote_retrieve_body($response), true);
-        if (is_array($body) && !empty($body['tag_name'])) {
-            $package = '';
-            foreach (isset($body['assets']) ? (array) $body['assets'] : array() as $asset) {
-                if (isset($asset['name']) && $asset['name'] === 'bbmediacore.zip') {
-                    $package = $asset['browser_download_url'];
-                }
-            }
-            if ($package !== '') {
-                $release = array(
-                    'version' => ltrim($body['tag_name'], 'vV'),
-                    'package' => $package,
-                    'url' => isset($body['html_url']) ? $body['html_url'] : '',
-                    'notes' => isset($body['body']) ? $body['body'] : '',
-                    'published' => isset($body['published_at']) ? $body['published_at'] : '',
-                );
-            }
+// Newest release for this site's channel. Cached for 1 hour, or 10 minutes
+// after a failure (e.g. while the repository is private).
+function bbcore_latest_release($force = false) {
+    $cache_key = bbcore_release_cache_key();
+    if (!$force) {
+        $cached = get_site_transient($cache_key);
+        if ($cached !== false) {
+            return $cached ? $cached : null;
         }
     }
 
-    // Cache failures as 0 so a GitHub outage isn't retried on every page load.
-    set_site_transient(BBCORE_RELEASE_CACHE, $release ? $release : 0, $release ? 6 * HOUR_IN_SECONDS : HOUR_IN_SECONDS);
+    $release = null;
+    if (bbcore_update_channel() === 'beta') {
+        // Newest of the recent releases, pre-releases included.
+        foreach ((array) bbcore_github_get('/releases?per_page=20') as $body) {
+            $candidate = bbcore_parse_release($body);
+            if ($candidate && (!$release || version_compare($candidate['version'], $release['version'], '>'))) {
+                $release = $candidate;
+            }
+        }
+    } else {
+        // GitHub's "latest" never includes pre-releases.
+        $release = bbcore_parse_release(bbcore_github_get('/releases/latest'));
+    }
+
+    // Failures are cached as 0 so they aren't retried on every page load.
+    set_site_transient($cache_key, $release ? $release : 0, $release ? HOUR_IN_SECONDS : 10 * MINUTE_IN_SECONDS);
     return $release;
+}
+
+// True once per request when someone clicked "Check again" on Dashboard > Updates.
+function bbcore_is_forced_update_check() {
+    static $used = false;
+    if ($used || !is_admin() || empty($_GET['force-check'])) {
+        return false;
+    }
+    $used = true;
+    return true;
 }
 
 function bbcore_plugin_slug() {
@@ -64,7 +113,7 @@ function bbcore_check_for_update($transient) {
         return $transient;
     }
 
-    $release = bbcore_latest_release();
+    $release = bbcore_latest_release(bbcore_is_forced_update_check());
     if (!$release) {
         return $transient;
     }
@@ -125,7 +174,7 @@ function bbcore_after_update($upgrader, $options) {
         $plugins[] = $options['plugin'];
     }
     if (in_array(BBCORE_BASENAME, $plugins, true)) {
-        delete_site_transient(BBCORE_RELEASE_CACHE);
+        delete_site_transient(bbcore_release_cache_key());
     }
 }
 add_action('upgrader_process_complete', 'bbcore_after_update', 10, 2);

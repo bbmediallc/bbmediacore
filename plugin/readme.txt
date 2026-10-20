@@ -39,5 +39,5 @@ Sites updating from BB Media Core 1.6.x are set to B&B Media automatically.
 * One plugin for every company, chosen per site on first activation.
 * New Settings > Brand Settings panel to edit or add companies.
 * Optional Tutorials page, replacing the ACF-based version (videos are imported automatically).
-* Fixed update checks: no longer hard-coded to 1.6.5, and GitHub is checked at most every 6 hours.
+* Fixed update checks: no longer hard-coded to 1.6.5, and GitHub is checked at most hourly.
 * Support form accepts logged-in users only.

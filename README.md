@@ -61,8 +61,25 @@ field group (and ACF itself, if nothing else uses it) can be removed.
    git push origin main v1.7.1
    ```
 5. GitHub checks the code, builds `bbmediacore.zip` and publishes the
-   release. Sites see the update within about a day. WordPress checks
-   twice a day, and the plugin asks GitHub at most every 6 hours.
+   release. This works while the repository is private.
+6. Sites can only see the release while the repository is public. Use
+   Dashboard > Updates > **Check again** (or your site manager's update
+   check) to have a site look right away. Otherwise sites notice on their
+   own within about a day. WordPress downloads the zip when it installs the
+   update, so a site that hasn't finished updating before the repository is
+   private again will fail to update.
+
+### Testing a change on one site first
+
+Add this line to the test site's `wp-config.php`:
+
+```php
+define('BBCORE_UPDATE_CHANNEL', 'beta');
+```
+
+Release a test version, e.g. version `1.7.1-beta.1`, tagged `v1.7.1-beta.1`.
+Any tag with a dash becomes a GitHub pre-release, and only sites with the
+line above are offered it. When it looks good, release `1.7.1` normally.
 
 To build the zip yourself: `bash scripts/build.sh` (output in `dist/`).
 
@@ -81,8 +98,7 @@ bottom, save it as `plugin/brands/<id>/brand.json`, add its `logo` and
   `custom-dashboard-plugin.php`. WordPress tracks the plugin by
   `bbmediacore/custom-dashboard-plugin.php`. Changing either one makes
   updates install a second copy, or deactivates the plugin.
-- The GitHub repository `bbmediallc/bbmediacore` must stay **public**, and
-  each release must have a `bbmediacore.zip` file. Sites check
-  `releases/latest` without logging in.
+- The GitHub repository name `bbmediallc/bbmediacore`, and a
+  `bbmediacore.zip` file on each release. Sites check it without logging in.
 - `Requires PHP: 5.6`: some sites may run old PHP. GitHub checks every
   change against PHP 5.6, 7.4 and 8.3.
