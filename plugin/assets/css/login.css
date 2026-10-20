@@ -1,20 +1,15 @@
-/*
-Plugin Name: BB Media Core
-Description: Custom CSS for the BB Media Core plugin.
-Version: 1.6.6
-Author: B&B Media, LLC
-*/
+/* Login screen. Brand colors and images come from CSS variables printed by
+   bbcore_brand_css_variables() in includes/dashboard.php. */
 
-/* WordPress Login Page Styles */
 body.login div#login h1 a {
-    background-image: url("../images/logo.png") !important; 
+    background-image: var(--bbcore-logo) !important;
     background-size: contain !important;
     width: 320px !important;
     height: 80px !important;
 }
 
 body.login {
-    background: url("../images/login-bg.jpg") !important;
+    background: var(--bbcore-login-background) !important;
     background-size: cover !important;
     background-position: 50% !important;
 }
@@ -23,11 +18,19 @@ body.login {
     border: unset !important;
 }
 
+.login #login #loginform {
+    background-color: #ffffff !important;
+}
+
+.login #login #user_login:focus, .login #login #user_pass:focus {
+    border-bottom: 0px !important;
+}
+
 div#login {
     background: #ffffff !important;
     padding: 25px !important;
-    border-top: solid 4px #35479d !important;
-    box-shadow: 0 0 40px #36489d !important;
+    border-top: solid 4px var(--bbcore-login-border, #35479d) !important;
+    box-shadow: 0 0 40px var(--bbcore-login-shadow, #36489d) !important;
     position: absolute !important;
     top: 25% !important;
     transform: translate(-50%, -25%) !important;
@@ -35,13 +38,13 @@ div#login {
 }
 
 .wp-core-ui #login .wp-generate-pw, .wp-core-ui #login .button-primary, body.wp-core-ui #login .two-factor-email-resend .button {
-    background: #33469d !important;
+    background: var(--bbcore-login-button-alt, #33469d) !important;
     transition: ease all .25s !important;
 }
 
 .wp-core-ui #login .wp-generate-pw:hover, .wp-core-ui #login .button-primary:hover, body.wp-core-ui #login .two-factor-email-resend .button:hover {
-    background: #2fc1e0 !important;
-    Border-color: #2fc1e0 !important;
+    background: var(--bbcore-login-button-alt-hover, #2fc1e0) !important;
+    border-color: var(--bbcore-login-button-alt-hover, #2fc1e0) !important;
     transition: ease all .25s !important;
 }
 
@@ -53,8 +56,12 @@ body.login:before {
     width: 100% !important;
     height: 100% !important;
     background-color: transparent !important;
-    background-image: linear-gradient(-45deg, #26c2e0 1%, #35479d 100%) !important;
+    background-image: linear-gradient(-45deg, var(--bbcore-login-gradient-start, #26c2e0) 1%, var(--bbcore-login-gradient-end, #35479d) 100%) !important;
     opacity: .9 !important;
+}
+
+.login #login :before {
+    font-family: dashicons !important;
 }
 
 body.login {
@@ -62,16 +69,16 @@ body.login {
 }
 
 #wp-submit {
-    background: #2271b1 !important;
-    border-color: #2271b1 !important;
+    background: var(--bbcore-login-button, #2271b1) !important;
+    border-color: var(--bbcore-login-button, #2271b1) !important;
     color: #fff !important;
     text-decoration: none !important;
     text-shadow: none !important;
 }
 
 #wp-submit:hover {
-    background: #135e96 !important;
-    border-color: #135e96 !important;
+    background: var(--bbcore-login-button-hover, #135e96) !important;
+    border-color: var(--bbcore-login-button-hover, #135e96) !important;
     color: #fff !important;
 }
 

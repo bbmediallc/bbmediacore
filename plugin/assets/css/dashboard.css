@@ -1,9 +1,5 @@
-/*
-Plugin Name: BB Media Core
-Description: Custom CSS for the BB Media Core plugin.
-Version: 1.6.6
-Author: B&B Media, LLC
-*/
+/* Custom dashboard. Brand colors come from CSS variables printed by
+   bbcore_brand_css_variables() in includes/dashboard.php. */
 
 .welcome-message {
     width: 100%;
@@ -27,7 +23,7 @@ Author: B&B Media, LLC
     margin-top: 0px !important;
 }
 
-custom-dashboard-layout p {
+.custom-dashboard-layout p {
     margin-bottom: 20px !important;
     margin-top: 5px !important;
 }
@@ -51,8 +47,8 @@ custom-dashboard-layout p {
 .custom-dashboard-right form input[type=submit] {
     background: #ffffff;
     padding: 20px 30px;
-    border: solid 2px #36489d;
-    color: #36489d;
+    border: solid 2px var(--bbcore-primary, #35479d);
+    color: var(--bbcore-primary, #35479d);
     text-transform: uppercase;
     font-weight: 700;
     transition: ease all .250s;
@@ -60,7 +56,7 @@ custom-dashboard-layout p {
 }
 
 .custom-dashboard-right form input[type=submit]:hover {
-    background: #36489d;
+    background: var(--bbcore-primary, #35479d);
     color: #ffffff;
     transition: ease all .250s;
 }
@@ -68,7 +64,7 @@ custom-dashboard-layout p {
 .custom-dashboard-right .support-form {
     background: #ffffff;
     padding: 25px;
-    border-top: solid 4px #35479d;
+    border-top: solid 4px var(--bbcore-primary, #35479d);
     box-shadow: 0 0 20px #00000021;
 }
 
@@ -101,7 +97,7 @@ custom-dashboard-layout p {
     margin-bottom: 20px;
     background: #ffffff;
     padding: 25px;
-    border-top: solid 4px #35479d;
+    border-top: solid 4px var(--bbcore-primary, #35479d);
     box-shadow: 0 0 20px #00000021;
     column-gap: 20px;
 }
@@ -130,7 +126,7 @@ custom-dashboard-layout p {
 }
 
 .post-title:hover {
-    color: #0073aa; /* Change color on hover */
+    color: var(--bbcore-link, #0073aa); /* Change color on hover */
 }
 
 .post-date {
@@ -147,7 +143,7 @@ custom-dashboard-layout p {
 
 .continue-reading {
     font-weight: bold;
-    color: #0073aa;
+    color: var(--bbcore-link, #0073aa);
     text-decoration: none;
 }
 

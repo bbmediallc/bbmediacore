@@ -1,0 +1,22 @@
+{
+    "name": "B&B Media",
+    "plugin_name": "BB Media Core",
+    "plugin_description": "A plugin that provides core functionality for B&B Media websites.",
+    "website_url": "https://bandbmedia.com",
+    "support_emails": "support@bandbmedia.com",
+    "blog_url": "https://bandbmedia.com",
+    "blog_author_fallback": "The B&B Media Team",
+    "logo": "logo.png",
+    "menu_icon": "icon.svg",
+    "login_background": "",
+    "color_primary": "#35479d",
+    "color_link": "#0073aa",
+    "login_border": "#35479d",
+    "login_shadow": "#36489d",
+    "login_gradient_start": "#26c2e0",
+    "login_gradient_end": "#35479d",
+    "login_button": "#2271b1",
+    "login_button_hover": "#135e96",
+    "login_button_alt": "#33469d",
+    "login_button_alt_hover": "#2fc1e0"
+}

@@ -1,0 +1,99 @@
+/* Settings > Brand Settings */
+
+.bbcore-brand-settings .bbcore-card {
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    padding: 4px 20px 12px;
+    margin: 16px 0;
+    max-width: 960px;
+}
+
+.bbcore-brand-settings .bbcore-setup {
+    border-left: 4px solid #dba617;
+}
+
+.bbcore-brand-tiles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.bbcore-brand-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    width: 180px;
+    padding: 16px 12px 12px;
+    border: 2px solid #dcdcde;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.bbcore-brand-tile:has(input:checked) {
+    border-color: #2271b1;
+    background: #f0f6fc;
+}
+
+.bbcore-brand-tile-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+}
+
+.bbcore-brand-tile-logo img {
+    max-width: 150px;
+    max-height: 50px;
+}
+
+.bbcore-brand-tile-name {
+    font-weight: 600;
+}
+
+.bbcore-pill {
+    display: inline-block;
+    padding: 0 8px;
+    border-radius: 10px;
+    background: #00a32a;
+    color: #fff;
+    font-size: 11px;
+    line-height: 18px;
+}
+
+.bbcore-actions {
+    white-space: nowrap;
+    text-align: right;
+}
+
+.bbcore-actions form {
+    display: inline;
+}
+
+.bbcore-color {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.bbcore-color input[type="color"] {
+    width: 36px;
+    height: 30px;
+    padding: 0 2px;
+}
+
+.bbcore-image {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+.bbcore-image-preview img {
+    display: block;
+    max-width: 150px;
+    max-height: 50px;
+    padding: 4px;
+    background: #f0f0f1;
+}

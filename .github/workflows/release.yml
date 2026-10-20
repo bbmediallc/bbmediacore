@@ -1,0 +1,65 @@
+# On every push: check the PHP for syntax errors on old and new PHP versions,
+# and make sure the zip builds.
+# On a version tag (e.g. v1.7.0): also publish a GitHub release with
+# bbmediacore.zip attached. Every site picks it up within about a day.
+name: Build and release
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: ['5.6', '7.4', '8.3']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: none
+      - name: PHP syntax check
+        run: find plugin -name '*.php' -print0 | xargs -0 -n1 php -l
+
+  build:
+    needs: lint
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build zip
+        run: |
+          if [[ "$GITHUB_REF" == refs/tags/* ]]; then
+            bash scripts/build.sh "$GITHUB_REF_NAME"
+          else
+            bash scripts/build.sh
+          fi
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bbmediacore
+          path: dist/bbmediacore.zip
+
+      - name: Publish release
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          # Release notes are this version's section of CHANGELOG.md.
+          awk -v v="$version" '
+            $0 ~ "^## \\[?" v "\\]?" { found=1; next }
+            found && /^## / { exit }
+            found { print }
+          ' CHANGELOG.md > notes.md
+          if [ -s notes.md ]; then
+            gh release create "$GITHUB_REF_NAME" dist/bbmediacore.zip --title "$GITHUB_REF_NAME" --notes-file notes.md
+          else
+            gh release create "$GITHUB_REF_NAME" dist/bbmediacore.zip --title "$GITHUB_REF_NAME" --generate-notes
+          fi
