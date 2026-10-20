@@ -115,6 +115,20 @@ function bbcore_check_for_update($transient) {
 
     $release = bbcore_latest_release(bbcore_is_forced_update_check());
     if (!$release) {
+        // GitHub can't be reached (e.g. the repository is private). Still
+        // list the plugin as up to date: WordPress only shows the Plugins
+        // page "Enable auto-updates" link for plugins it has update info for.
+        if (!isset($transient->response[BBCORE_BASENAME]) && !isset($transient->no_update[BBCORE_BASENAME])) {
+            $transient->no_update[BBCORE_BASENAME] = (object) array(
+                'id' => 'github.com/' . BBCORE_GITHUB_REPO,
+                'slug' => bbcore_plugin_slug(),
+                'plugin' => BBCORE_BASENAME,
+                'new_version' => BBCORE_VERSION,
+                'url' => bbcore_brand('website_url'),
+                'package' => '',
+                'icons' => array('svg' => bbcore_brand_image_url('menu_icon')),
+            );
+        }
         return $transient;
     }
 

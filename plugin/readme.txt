@@ -4,7 +4,7 @@ Tags: core functionality, admin, custom dashboard, support form, white label
 Requires at least: 5.0
 Tested up to: 6.9
 Requires PHP: 5.6
-Stable tag: 2.0.0
+Stable tag: 2.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,6 +34,9 @@ Only the support@bandbmedia.com account can choose the company or change brand s
 Sites updating from BB Media Core 1.6.x are set to B&B Media automatically.
 
 == Changelog ==
+
+= 2.0.1 =
+* The Plugins page always shows "Enable auto-updates" for this plugin.
 
 = 2.0.0 =
 * Version 2.0: the all-in-one release (one plugin for every company, Brand Settings, Tutorials).

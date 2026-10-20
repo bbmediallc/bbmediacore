@@ -2,6 +2,15 @@
 
 Each `## [version]` section becomes the release notes on GitHub.
 
+## [2.0.1] - 2026-10-20
+
+### Fixed
+- The Plugins page "Enable auto-updates" link now always shows for this
+  plugin. WordPress hid it whenever GitHub couldn't be reached, such as
+  while the repository is private.
+- Added an `Update URI` header so WordPress.org never offers a different
+  plugin with the same folder name as an update.
+
 ## [2.0.0] - 2026-10-20
 
 The all-in-one release: one plugin for B&B Media, KNC Marketing and Pace
