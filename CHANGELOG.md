@@ -7,6 +7,7 @@ Each `## [version]` section becomes the release notes on GitHub.
 ### Changed
 - Brand Settings and Tutorial Videos moved from the Settings menu to the
   Dashboard menu (still visible only to support@bandbmedia.com).
+- KNC support tickets no longer go to chelsey@kncmarketingagency.com.
 
 ## [1.7.0] - 2026-10-20
 
