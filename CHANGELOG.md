@@ -2,7 +2,7 @@
 
 Each `## [version]` section becomes the release notes on GitHub.
 
-## [1.7.0] - unreleased
+## [1.7.0] - 2026-10-20
 
 One plugin now serves B&B Media, KNC Marketing and Pace Marketing (and any
 company added later). It replaces the separate `knccore` and `pacecore` plugins.
