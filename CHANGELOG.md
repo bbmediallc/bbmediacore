@@ -7,6 +7,9 @@ Each `## [version]` section becomes the release notes on GitHub.
 ### Changed
 - WordPress's update screens always show the B&B Media icon, to match the
   "BB Media Core" name WordPress shows there, whichever company is active.
+- Only support@bandbmedia.com sees this plugin on the Plugins page, and its
+  available updates on the Updates screen and in the update counts.
+  Background auto-updates still run.
 
 ## [2.0.1] - 2026-10-20
 

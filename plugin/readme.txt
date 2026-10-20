@@ -37,6 +37,7 @@ Sites updating from BB Media Core 1.6.x are set to B&B Media automatically.
 
 = 2.0.2 =
 * Update screens always show the B&B Media icon.
+* Only support@bandbmedia.com sees this plugin on the Plugins page and its available updates.
 
 = 2.0.1 =
 * The Plugins page always shows "Enable auto-updates" for this plugin.
