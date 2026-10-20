@@ -195,7 +195,10 @@ function bbcore_render_features() {
                 <th scope="row">Tutorials</th>
                 <td>
                     <label><input type="checkbox" name="tutorials_enabled" value="1" <?php checked(bbcore_tutorials_enabled()); ?>> Enable tutorials</label>
-                    <p class="description">Adds a Tutorials page under Dashboard for clients. <a href="<?php echo esc_url(bbcore_tutorials_manager_url()); ?>">Manage tutorial videos</a> (<?php echo (int) count(bbcore_get_tutorials()); ?> added)</p>
+                    <p class="description">Adds a Tutorials page under Dashboard for clients, and Tutorial Videos for you to manage them.
+                    <?php if (bbcore_tutorials_enabled()) : ?>
+                        <a href="<?php echo esc_url(bbcore_tutorials_manager_url()); ?>">Manage tutorial videos</a> (<?php echo (int) count(bbcore_get_tutorials()); ?> added)
+                    <?php endif; ?></p>
                 </td>
             </tr></table>
             <?php submit_button('Save features', 'secondary'); ?>

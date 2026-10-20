@@ -2,6 +2,18 @@
 
 Each `## [version]` section becomes the release notes on GitHub.
 
+## [2.0.0] - 2026-10-20
+
+The all-in-one release: one plugin for B&B Media, KNC Marketing and Pace
+Marketing, with Brand Settings and Tutorials. See 1.7.0 and 1.7.1 below
+for everything that changed since 1.6.6.
+
+### Fixed
+- KNC and Pace logos were invisible in Brand Settings (SVG logos had no size).
+
+### Changed
+- Dashboard > Tutorial Videos only appears while tutorials are enabled.
+
 ## [1.7.1] - 2026-10-20
 
 ### Changed

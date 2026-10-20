@@ -49,16 +49,16 @@ field group (and ACF itself, if nothing else uses it) can be removed.
 ## Releasing a change
 
 1. Make the change in `plugin/`.
-2. Pick the new version number (1.7.0 → 1.7.1 for fixes, 1.8.0 for features)
+2. Pick the new version number (2.0.0 → 2.0.1 for fixes, 2.1.0 for features)
    and set it in all three places:
    - `Version:` in `plugin/custom-dashboard-plugin.php`
    - `BBCORE_VERSION` in `plugin/custom-dashboard-plugin.php`
    - `Stable tag:` in `plugin/readme.txt`
-3. Add a `## [1.7.1]` section to `CHANGELOG.md`.
+3. Add a `## [2.0.1]` section to `CHANGELOG.md`.
 4. Commit, then tag and push:
    ```
-   git tag v1.7.1
-   git push origin main v1.7.1
+   git tag v2.0.1
+   git push origin main v2.0.1
    ```
 5. GitHub checks the code, builds `bbmediacore.zip` and publishes the
    release. This works while the repository is private.
@@ -77,9 +77,9 @@ Add this line to the test site's `wp-config.php`:
 define('BBCORE_UPDATE_CHANNEL', 'beta');
 ```
 
-Release a test version, e.g. version `1.7.1-beta.1`, tagged `v1.7.1-beta.1`.
+Release a test version, e.g. version `2.0.1-beta.1`, tagged `v2.0.1-beta.1`.
 Any tag with a dash becomes a GitHub pre-release, and only sites with the
-line above are offered it. When it looks good, release `1.7.1` normally.
+line above are offered it. When it looks good, release `2.0.1` normally.
 
 To build the zip yourself: `bash scripts/build.sh` (output in `dist/`).
 

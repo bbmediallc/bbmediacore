@@ -4,7 +4,7 @@ Tags: core functionality, admin, custom dashboard, support form, white label
 Requires at least: 5.0
 Tested up to: 6.9
 Requires PHP: 5.6
-Stable tag: 1.7.1
+Stable tag: 2.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,6 +34,11 @@ Only the support@bandbmedia.com account can choose the company or change brand s
 Sites updating from BB Media Core 1.6.x are set to B&B Media automatically.
 
 == Changelog ==
+
+= 2.0.0 =
+* Version 2.0: the all-in-one release (one plugin for every company, Brand Settings, Tutorials).
+* KNC and Pace logos now show in Brand Settings.
+* Tutorial Videos only appears under Dashboard while tutorials are enabled.
 
 = 1.7.1 =
 * Brand Settings and Tutorial Videos are now under the Dashboard menu.

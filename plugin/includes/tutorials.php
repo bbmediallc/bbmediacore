@@ -42,9 +42,9 @@ function bbcore_add_tutorial_pages() {
 // After bbcore_add_dashboard_page(), so the Dashboard menu exists.
 add_action('admin_menu', 'bbcore_add_tutorial_pages', 11);
 
-// Listed after Brand Settings (priority 12).
+// Listed after Brand Settings (priority 12). Hidden while tutorials are off.
 function bbcore_add_tutorials_manager_page() {
-    if (bbcore_is_brand_admin()) {
+    if (bbcore_tutorials_enabled() && bbcore_is_brand_admin()) {
         $GLOBALS['bbcore_tutorials_manager_hook'] = add_submenu_page('custom_dashboard', 'Tutorial Videos', 'Tutorial Videos', 'manage_options', 'bbcore-tutorials', 'bbcore_render_tutorials_manager');
     }
 }
