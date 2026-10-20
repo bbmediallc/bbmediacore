@@ -1,32 +1,19 @@
 <?php
-// Shows the active brand's name and description on the Plugins page,
-// and in the admin footer. Only the brand admin sees this plugin on the
-// Plugins page or its updates anywhere in wp-admin.
+// The admin footer, and who sees this plugin. Only the brand admin sees it
+// on the Plugins page, or its updates anywhere in wp-admin, so it keeps its
+// real name, BB Media Core, whichever company is active.
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
-function bbcore_brand_plugin_row($plugins) {
-    if (!isset($plugins[BBCORE_BASENAME])) {
-        return $plugins;
-    }
-    if (!bbcore_is_brand_admin()) {
+function bbcore_hide_plugin_row_from_others($plugins) {
+    if (isset($plugins[BBCORE_BASENAME]) && !bbcore_is_brand_admin()) {
         unset($plugins[BBCORE_BASENAME]);
-        return $plugins;
-    }
-    $name = bbcore_brand('plugin_name');
-    $description = bbcore_brand('plugin_description');
-    if ($name !== '') {
-        $plugins[BBCORE_BASENAME]['Name'] = $name;
-        $plugins[BBCORE_BASENAME]['Title'] = $name;
-    }
-    if ($description !== '') {
-        $plugins[BBCORE_BASENAME]['Description'] = $description;
     }
     return $plugins;
 }
-add_filter('all_plugins', 'bbcore_brand_plugin_row');
+add_filter('all_plugins', 'bbcore_hide_plugin_row_from_others');
 
 // Hides this plugin's available update from everyone but the brand admin:
 // the Updates screen, the update counts in the menu and toolbar, and the

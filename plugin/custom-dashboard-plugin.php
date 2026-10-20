@@ -3,7 +3,7 @@
 Plugin Name: BB Media Core
 Plugin URI: https://github.com/bbmediallc/bbmediacore
 Description: A plugin that provides core functionality for B&B Media websites.
-Version: 2.0.3
+Version: 2.0.4
 Author: B&B Media, LLC
 Author URI: https://bandbmedia.com
 License: GPLv2 or later
@@ -14,8 +14,8 @@ Requires PHP: 5.6
 Update URI: https://github.com/bbmediallc/bbmediacore
 */
 
-// The Name and Description above are what WordPress reads from the file.
-// includes/plugin-list.php swaps them for the active brand's values.
+// Only the brand admin sees this plugin on the Plugins page, so it keeps
+// this name whichever company is active (see includes/plugin-list.php).
 // Never rename this file or the bbmediacore folder: WordPress identifies
 // the active plugin as "bbmediacore/custom-dashboard-plugin.php", and
 // renaming either one would deactivate it on every site that updates.
@@ -26,7 +26,7 @@ if (!defined('ABSPATH')) {
 
 // Must match the Version header above and "Stable tag" in readme.txt.
 // scripts/build.sh refuses to build if they differ.
-define('BBCORE_VERSION', '2.0.3');
+define('BBCORE_VERSION', '2.0.4');
 define('BBCORE_FILE', __FILE__);
 define('BBCORE_DIR', plugin_dir_path(__FILE__));
 define('BBCORE_URL', plugin_dir_url(__FILE__));

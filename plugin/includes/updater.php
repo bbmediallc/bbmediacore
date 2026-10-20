@@ -113,6 +113,18 @@ function bbcore_update_icons() {
     return array('svg' => BBCORE_URL . 'brands/' . BBCORE_DEFAULT_BRAND . '/icon.svg');
 }
 
+// "Requires at least", "Tested up to" and "Requires PHP" from this plugin's
+// header. Without "tested", the Updates screen says "Not tested" for every
+// WordPress version.
+function bbcore_plugin_requirements() {
+    $data = get_file_data(BBCORE_FILE, array(
+        'requires' => 'Requires at least',
+        'tested' => 'Tested up to',
+        'requires_php' => 'Requires PHP',
+    ), 'plugin');
+    return array_filter($data);
+}
+
 // Runs when WordPress refreshes its list of plugin updates (about twice a day).
 function bbcore_check_for_update($transient) {
     if (!is_object($transient) || empty($transient->checked)) {
@@ -125,20 +137,20 @@ function bbcore_check_for_update($transient) {
         // list the plugin as up to date: WordPress only shows the Plugins
         // page "Enable auto-updates" link for plugins it has update info for.
         if (!isset($transient->response[BBCORE_BASENAME]) && !isset($transient->no_update[BBCORE_BASENAME])) {
-            $transient->no_update[BBCORE_BASENAME] = (object) array(
+            $transient->no_update[BBCORE_BASENAME] = (object) array_merge(array(
                 'id' => 'github.com/' . BBCORE_GITHUB_REPO,
                 'slug' => bbcore_plugin_slug(),
                 'plugin' => BBCORE_BASENAME,
                 'new_version' => BBCORE_VERSION,
-                'url' => bbcore_brand('website_url'),
+                'url' => 'https://bandbmedia.com',
                 'package' => '',
                 'icons' => bbcore_update_icons(),
-            );
+            ), bbcore_plugin_requirements());
         }
         return $transient;
     }
 
-    $item = (object) array(
+    $item = (object) array_merge(array(
         'id' => 'github.com/' . BBCORE_GITHUB_REPO,
         'slug' => bbcore_plugin_slug(),
         'plugin' => BBCORE_BASENAME,
@@ -146,7 +158,7 @@ function bbcore_check_for_update($transient) {
         'url' => $release['url'],
         'package' => $release['package'],
         'icons' => bbcore_update_icons(),
-    );
+    ), bbcore_plugin_requirements());
 
     if (version_compare(BBCORE_VERSION, $release['version'], '<')) {
         $transient->response[BBCORE_BASENAME] = $item;
@@ -158,29 +170,28 @@ function bbcore_check_for_update($transient) {
 }
 add_filter('pre_set_site_transient_update_plugins', 'bbcore_check_for_update');
 
-// The "View details" popup, shown with the active brand's name.
+// The "View details" popup.
 function bbcore_plugin_info($result, $action, $args) {
     if ($action !== 'plugin_information' || !isset($args->slug) || $args->slug !== bbcore_plugin_slug()) {
         return $result;
     }
     $release = bbcore_latest_release();
     $notes = $release && $release['notes'] !== '' ? wpautop(esc_html($release['notes'])) : '';
+    $plugin = get_file_data(BBCORE_FILE, array('name' => 'Plugin Name', 'description' => 'Description'), 'plugin');
 
-    return (object) array(
-        'name' => bbcore_brand('plugin_name'),
+    return (object) array_merge(array(
+        'name' => $plugin['name'],
         'slug' => bbcore_plugin_slug(),
         'version' => $release ? $release['version'] : BBCORE_VERSION,
-        'author' => esc_html(bbcore_brand('name')),
-        'homepage' => bbcore_brand('website_url'),
+        'author' => 'B&amp;B Media, LLC',
+        'homepage' => 'https://bandbmedia.com',
         'download_link' => $release ? $release['package'] : '',
         'last_updated' => $release ? $release['published'] : '',
-        'requires' => '5.0',
-        'requires_php' => '5.6',
         'sections' => array(
-            'description' => esc_html(bbcore_brand('plugin_description')),
+            'description' => esc_html($plugin['description']),
             'changelog' => $notes,
         ),
-    );
+    ), bbcore_plugin_requirements());
 }
 add_filter('plugins_api', 'bbcore_plugin_info', 20, 3);
 

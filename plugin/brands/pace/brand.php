@@ -8,8 +8,6 @@ if (!defined('ABSPATH')) {
 
 return array(
     'name' => 'Pace Marketing',
-    'plugin_name' => 'Pace Marketing Core',
-    'plugin_description' => 'A plugin that provides core functionality for Pace Marketing websites.',
     'website_url' => 'https://pacemarketing.com/',
     'support_emails' => 'support@bandbmedia.com, steph@pacemarketing.com',
     'blog_url' => 'https://pacemarketing.com',

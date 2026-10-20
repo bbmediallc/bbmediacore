@@ -163,7 +163,7 @@ function bbcore_render_active_brand_picker() {
     <div class="bbcore-card<?php echo $setup ? ' bbcore-setup' : ''; ?>">
         <h2><?php echo $setup ? 'Which company is this site for?' : 'Active company'; ?></h2>
         <p><?php echo $setup
-            ? 'This sets the plugin name, logo, colors, login page, support email and blog feed for this site. You can change it here later.'
+            ? 'This sets the logo, colors, login page, support email and blog feed for this site. You can change it here later.'
             : 'Everything this site shows comes from the company selected here.'; ?></p>
         <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
             <?php wp_nonce_field('bbcore_set_active_brand'); ?>
@@ -223,12 +223,11 @@ function bbcore_render_brand_list() {
         <h2>Companies</h2>
         <p>Built-in companies ship with every plugin update. Changes you save here apply to this site only.</p>
         <table class="widefat striped">
-            <thead><tr><th>Company</th><th>Plugin name</th><th>Support ticket recipients</th><th></th></tr></thead>
+            <thead><tr><th>Company</th><th>Support ticket recipients</th><th></th></tr></thead>
             <tbody>
             <?php foreach (bbcore_get_brands() as $slug => $brand) : ?>
                 <tr>
                     <td><strong><?php echo esc_html($brand['name']); ?></strong><?php echo $slug === $active ? ' <span class="bbcore-pill">Active</span>' : ''; ?><br><code><?php echo esc_html($slug); ?></code></td>
-                    <td><?php echo esc_html($brand['plugin_name']); ?></td>
                     <td><?php
                         $emails = bbcore_brand_emails($brand);
                         echo $emails ? implode('<br>', array_map('esc_html', $emails)) : '&mdash;';
@@ -259,8 +258,6 @@ function bbcore_render_brand_editor($slug) {
         // New companies start as a copy of B&B Media's settings.
         $brand = bbcore_get_brand(BBCORE_DEFAULT_BRAND);
         $brand['name'] = '';
-        $brand['plugin_name'] = '';
-        $brand['plugin_description'] = '';
         foreach (array('logo', 'menu_icon') as $image) {
             $brand[$image] = bbcore_brand_image_url($image, $brand);
         }

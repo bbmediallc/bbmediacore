@@ -8,8 +8,6 @@ if (!defined('ABSPATH')) {
 
 return array(
     'name' => 'KNC Marketing',
-    'plugin_name' => 'KNC Core',
-    'plugin_description' => 'A plugin that provides core functionality for KNC websites.',
     'website_url' => 'https://kncmarketingagency.com/',
     'support_emails' => 'support@bandbmedia.com, danielle@kncmarketingagency.com',
     'blog_url' => 'https://kncmarketingagency.com',

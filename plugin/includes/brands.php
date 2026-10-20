@@ -19,8 +19,6 @@ define('BBCORE_DEFAULT_BRAND', 'bbmedia');
 function bbcore_brand_fields() {
     return array(
         'name' => array('section' => 'general', 'type' => 'text', 'label' => 'Company name', 'help' => 'Used in the admin footer and the logo alt text.'),
-        'plugin_name' => array('section' => 'general', 'type' => 'text', 'label' => 'Plugin name', 'help' => 'What the Plugins page calls this plugin.'),
-        'plugin_description' => array('section' => 'general', 'type' => 'textarea', 'label' => 'Plugin description', 'help' => 'Shown under the name on the Plugins page.'),
         'website_url' => array('section' => 'general', 'type' => 'url', 'label' => 'Company website', 'help' => 'The "Powered by" link in the admin footer.'),
 
         'support_emails' => array('section' => 'support', 'type' => 'emails', 'label' => 'Support ticket recipients', 'help' => 'Comma-separated. Every address gets each ticket.'),

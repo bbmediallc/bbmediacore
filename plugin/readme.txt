@@ -4,7 +4,7 @@ Tags: core functionality, admin, custom dashboard, support form, white label
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 5.6
-Stable tag: 2.0.3
+Stable tag: 2.0.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,7 +14,6 @@ Core functionality for B&B Media websites and the agencies B&B Media white-label
 
 One plugin serves every company B&B Media builds sites for. Each site is set to one company (B&B Media, KNC Marketing, Pace Marketing, or one added later), and that company's branding is used everywhere:
 
-* The plugin's name and description on the Plugins page.
 * A branded admin footer.
 * A branded login screen.
 * A custom dashboard replacing the default WordPress dashboard.
@@ -34,6 +33,10 @@ Only the support@bandbmedia.com account can choose the company or change brand s
 Sites updating from BB Media Core 1.6.x are set to B&B Media automatically.
 
 == Changelog ==
+
+= 2.0.4 =
+* The Updates screen no longer says "Not tested" with the current WordPress version.
+* The plugin is always named BB Media Core, whichever company is active.
 
 = 2.0.3 =
 * Fixed: other plugins' screens at /wp-admin/?... (WooCommerce email preview, Gravity Forms column picker) no longer redirect to the dashboard.

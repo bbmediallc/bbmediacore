@@ -2,6 +2,20 @@
 
 Each `## [version]` section becomes the release notes on GitHub.
 
+## [2.0.4] - 2026-10-20
+
+### Fixed
+- The Updates screen said "Compatibility with WordPress ...: Not tested".
+  WordPress reads that from the update information, not the installed
+  plugin, so the updater now sends "Tested up to", "Requires at least" and
+  "Requires PHP" from the plugin header.
+
+### Changed
+- The plugin is always named BB Media Core (Plugins page and "View
+  details"), whichever company is active. Only support@bandbmedia.com sees
+  it there. The per-company "Plugin name" and "Plugin description"
+  settings are removed.
+
 ## [2.0.3] - 2026-10-20
 
 ### Fixed

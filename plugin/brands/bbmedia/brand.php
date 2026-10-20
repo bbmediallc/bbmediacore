@@ -8,8 +8,6 @@ if (!defined('ABSPATH')) {
 
 return array(
     'name' => 'B&B Media',
-    'plugin_name' => 'BB Media Core',
-    'plugin_description' => 'A plugin that provides core functionality for B&B Media websites.',
     'website_url' => 'https://bandbmedia.com',
     'support_emails' => 'support@bandbmedia.com',
     'blog_url' => 'https://bandbmedia.com',
