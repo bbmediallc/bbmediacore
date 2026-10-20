@@ -14,6 +14,8 @@ Each `## [version]` section becomes the release notes on GitHub.
 ### Changed
 - Brand Settings company picker: the radio button now sits next to the
   company name instead of above the logo.
+- Brand Settings company list: the "Type" column is replaced by each
+  company's support ticket recipients.
 
 ## [2.0.0] - 2026-10-20
 

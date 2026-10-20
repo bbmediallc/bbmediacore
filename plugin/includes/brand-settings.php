@@ -223,20 +223,15 @@ function bbcore_render_brand_list() {
         <h2>Companies</h2>
         <p>Built-in companies ship with every plugin update. Changes you save here apply to this site only.</p>
         <table class="widefat striped">
-            <thead><tr><th>Company</th><th>Plugin name</th><th>Type</th><th></th></tr></thead>
+            <thead><tr><th>Company</th><th>Plugin name</th><th>Support ticket recipients</th><th></th></tr></thead>
             <tbody>
             <?php foreach (bbcore_get_brands() as $slug => $brand) : ?>
                 <tr>
                     <td><strong><?php echo esc_html($brand['name']); ?></strong><?php echo $slug === $active ? ' <span class="bbcore-pill">Active</span>' : ''; ?><br><code><?php echo esc_html($slug); ?></code></td>
                     <td><?php echo esc_html($brand['plugin_name']); ?></td>
                     <td><?php
-                        if (!$brand['_builtin']) {
-                            echo 'Added on this site';
-                        } elseif ($brand['_customized']) {
-                            echo 'Built-in, edited on this site';
-                        } else {
-                            echo 'Built-in';
-                        }
+                        $emails = bbcore_brand_emails($brand);
+                        echo $emails ? implode('<br>', array_map('esc_html', $emails)) : '&mdash;';
                     ?></td>
                     <td class="bbcore-actions">
                         <a class="button" href="<?php echo esc_url(add_query_arg('edit', $slug, bbcore_brand_settings_url())); ?>">Edit</a>
