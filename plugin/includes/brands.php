@@ -72,7 +72,7 @@ function bbcore_builtin_brands() {
 }
 
 function bbcore_saved_brands() {
-    $saved = get_option('bbcore_brands', array());
+    $saved = bbcore_get_brand_option('bbcore_brands', array());
     return is_array($saved) ? $saved : array();
 }
 
@@ -110,9 +110,14 @@ function bbcore_brand_exists($slug) {
 }
 
 // The brand this site shows. Until setup is finished, a brand detected from
-// an old K&C or Pace plugin is used, otherwise B&B Media.
+// an old K&C or Pace plugin is used, otherwise B&B Media. When
+// network-activated, the network's choice wins over a site's own older one.
 function bbcore_active_brand_slug() {
-    foreach (array(get_option('bbcore_active_brand'), get_option('bbcore_suggested_brand')) as $slug) {
+    $candidates = array(bbcore_get_brand_option('bbcore_active_brand'), bbcore_get_brand_option('bbcore_suggested_brand'));
+    if (bbcore_is_network_active()) {
+        $candidates[] = get_option('bbcore_active_brand');
+    }
+    foreach ($candidates as $slug) {
         if (bbcore_brand_exists($slug)) {
             return $slug;
         }
@@ -218,19 +223,19 @@ function bbcore_save_brand($slug, $values) {
         $values = $diff;
         if (empty($values)) {
             unset($saved[$slug]);
-            update_option('bbcore_brands', $saved);
+            bbcore_update_brand_option('bbcore_brands', $saved);
             return;
         }
     }
     $saved[$slug] = $values;
-    update_option('bbcore_brands', $saved);
+    bbcore_update_brand_option('bbcore_brands', $saved);
 }
 
 // Deletes a custom brand, or clears a built-in brand's site edits.
 function bbcore_delete_saved_brand($slug) {
     $saved = bbcore_saved_brands();
     unset($saved[$slug]);
-    update_option('bbcore_brands', $saved);
+    bbcore_update_brand_option('bbcore_brands', $saved);
 }
 
 // The brand as the text of a brand.php file, for adding it to the codebase.

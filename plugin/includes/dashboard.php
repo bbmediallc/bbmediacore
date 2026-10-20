@@ -12,7 +12,11 @@ function bbcore_remove_default_dashboard_menu() {
 add_action('admin_menu', 'bbcore_remove_default_dashboard_menu', 999);
 
 // Hide the default dashboard menu for all users.
+// Not in Network Admin (multisite): its own Dashboard must stay.
 function bbcore_hide_default_dashboard_menu() {
+    if (is_network_admin() || is_user_admin()) {
+        return;
+    }
     echo '<style>#menu-dashboard { display: none !important; }</style>';
 }
 add_action('admin_head', 'bbcore_hide_default_dashboard_menu');
@@ -51,6 +55,10 @@ function bbcore_redirect_to_dashboard() {
     // own screens at /wp-admin/?something (WooCommerce's email preview,
     // Gravity Forms' column picker), and redirecting those breaks them.
     if ($pagenow !== 'index.php' || !empty($_GET) || $_SERVER['REQUEST_METHOD'] !== 'GET') {
+        return;
+    }
+    // Network Admin's dashboard (multisite) is also index.php; leave it alone.
+    if (is_network_admin() || is_user_admin()) {
         return;
     }
 

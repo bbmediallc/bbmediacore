@@ -55,9 +55,9 @@ function bbcore_handle_set_active_brand() {
     if (!bbcore_brand_exists($slug)) {
         bbcore_brand_settings_redirect(array('bbcore_msg' => 'unknown'));
     }
-    update_option('bbcore_active_brand', $slug);
-    delete_option('bbcore_needs_setup');
-    delete_option('bbcore_suggested_brand');
+    bbcore_update_brand_option('bbcore_active_brand', $slug);
+    bbcore_delete_brand_option('bbcore_needs_setup');
+    bbcore_delete_brand_option('bbcore_suggested_brand');
     bbcore_brand_settings_redirect(array('bbcore_msg' => 'activated'));
 }
 add_action('admin_post_bbcore_set_active_brand', 'bbcore_handle_set_active_brand');
@@ -140,6 +140,9 @@ function bbcore_render_brand_settings() {
     $edit = isset($_GET['edit']) ? sanitize_key($_GET['edit']) : '';
 
     echo '<div class="wrap bbcore-brand-settings"><h1>Brand Settings</h1>';
+    if (bbcore_is_network_active()) {
+        echo '<div class="notice notice-info inline"><p><strong>Network-wide:</strong> the company and company settings on this page apply to every site in this network. Features apply to this site only.</p></div>';
+    }
     if (isset($messages[$msg])) {
         printf('<div class="notice notice-%s is-dismissible"><p>%s</p></div>', esc_attr($messages[$msg][0]), esc_html($messages[$msg][1]));
     }

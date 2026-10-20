@@ -18,46 +18,60 @@ function bbcore_legacy_plugins() {
     );
 }
 
-// Active old per-company plugins, as plugin basename => brand slug.
+// Active old per-company plugins, as plugin basename => array(brand slug,
+// network-activated?).
 function bbcore_find_active_legacy_plugins() {
-    $found = array();
+    $active = array();
     foreach ((array) get_option('active_plugins', array()) as $basename) {
+        $active[$basename] = false;
+    }
+    if (is_multisite()) {
+        foreach (array_keys((array) get_site_option('active_sitewide_plugins', array())) as $basename) {
+            $active[$basename] = true;
+        }
+    }
+
+    $found = array();
+    foreach ($active as $basename => $network_wide) {
         $folder = dirname($basename);
         foreach (bbcore_legacy_plugins() as $legacy_folder => $brand) {
             if (strpos($folder, $legacy_folder) === 0) {
-                $found[$basename] = $brand;
+                $found[$basename] = array($brand, $network_wide);
             }
         }
     }
     return $found;
 }
 
-function bbcore_activate() {
+// $network_wide is true when network-activated on multisite.
+function bbcore_activate($network_wide = false) {
     if (!function_exists('deactivate_plugins')) {
         require_once ABSPATH . 'wp-admin/includes/plugin.php';
     }
+    $network = is_multisite() && $network_wide;
 
     // An old K&C or Pace plugin left active would add a second dashboard,
     // so turn it off (it is not deleted) and remember which brand it was.
-    foreach (bbcore_find_active_legacy_plugins() as $basename => $brand) {
-        deactivate_plugins($basename);
-        if (!get_option('bbcore_suggested_brand')) {
-            update_option('bbcore_suggested_brand', $brand);
+    foreach (bbcore_find_active_legacy_plugins() as $basename => $legacy) {
+        list($brand, $legacy_network_wide) = $legacy;
+        deactivate_plugins($basename, false, $legacy_network_wide);
+        if (!bbcore_get_brand_option('bbcore_suggested_brand', false, $network)) {
+            bbcore_update_brand_option('bbcore_suggested_brand', $brand, $network);
         }
     }
 
     bbcore_import_acf_tutorials();
 
-    if (!get_option('bbcore_active_brand')) {
-        update_option('bbcore_needs_setup', 1);
-        set_transient('bbcore_setup_redirect', 1, 5 * MINUTE_IN_SECONDS);
+    if (!bbcore_get_brand_option('bbcore_active_brand', false, $network)) {
+        bbcore_update_brand_option('bbcore_needs_setup', 1, $network);
+        bbcore_set_setup_redirect($network);
     }
 
     update_option('bbcore_db_version', BBCORE_VERSION);
 }
 
 function bbcore_needs_setup() {
-    return (bool) get_option('bbcore_needs_setup');
+    return (bool) bbcore_get_brand_option('bbcore_needs_setup');
 }
 
 // Runs once per new version.
@@ -66,9 +80,9 @@ function bbcore_maybe_upgrade() {
         return;
     }
 
-    if (get_option('bbcore_active_brand') === false && !bbcore_needs_setup()) {
+    if (bbcore_get_brand_option('bbcore_active_brand') === false && !bbcore_needs_setup()) {
         // Updated in place from the old single-brand BB Media Core.
-        update_option('bbcore_active_brand', BBCORE_DEFAULT_BRAND);
+        bbcore_update_brand_option('bbcore_active_brand', BBCORE_DEFAULT_BRAND);
     }
 
     // A site running the one-off ACF tutorials version keeps its videos.
@@ -89,13 +103,13 @@ function bbcore_brand_settings_url() {
 
 // Right after activation, take the brand admin straight to setup.
 function bbcore_setup_redirect() {
-    if (!get_transient('bbcore_setup_redirect') || !bbcore_is_brand_admin()) {
+    if (!bbcore_setup_redirect_pending() || !bbcore_is_brand_admin()) {
         return;
     }
     if (wp_doing_ajax() || isset($_GET['activate-multi'])) {
         return;
     }
-    delete_transient('bbcore_setup_redirect');
+    bbcore_clear_setup_redirect();
     wp_safe_redirect(bbcore_brand_settings_url());
     exit;
 }

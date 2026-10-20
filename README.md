@@ -35,6 +35,13 @@ To allow another account on one site, add to that site's `wp-config.php`:
 define('BBCORE_ADMIN_EMAILS', 'support@bandbmedia.com, someone@example.com');
 ```
 
+## Multisite
+
+Network-activate the plugin and the company choice (plus any company edits)
+applies to every site in the network. Set it from Dashboard > Brand Settings
+on any site. Tutorials stay per site. Activated on individual sites instead,
+each site has its own company, as on a normal install.
+
 ## Tutorials
 
 Off by default. Turn on per site at Dashboard > Brand Settings > Features.

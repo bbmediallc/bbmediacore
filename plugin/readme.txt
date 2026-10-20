@@ -4,7 +4,7 @@ Tags: core functionality, admin, custom dashboard, support form, white label
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 5.6
-Stable tag: 2.0.4
+Stable tag: 2.0.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,6 +33,10 @@ Only the support@bandbmedia.com account can choose the company or change brand s
 Sites updating from BB Media Core 1.6.x are set to B&B Media automatically.
 
 == Changelog ==
+
+= 2.0.5 =
+* Multisite: when network-activated, one company choice applies to every site.
+* Multisite: the Network Admin dashboard and its Dashboard menu work again.
 
 = 2.0.4 =
 * The Updates screen no longer says "Not tested" with the current WordPress version.

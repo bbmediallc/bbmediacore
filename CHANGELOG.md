@@ -2,6 +2,19 @@
 
 Each `## [version]` section becomes the release notes on GitHub.
 
+## [2.0.5] - 2026-10-20
+
+### Added
+- Multisite: when network-activated, the company and company settings are
+  set once for the whole network (from Dashboard > Brand Settings on any
+  site). Tutorials stay per site. Activated on a single site, nothing changes.
+- Network activation also turns off network-activated old K&C or Pace
+  plugins.
+
+### Fixed
+- Multisite: visiting Network Admin's dashboard redirected to the main
+  site's custom dashboard, and Network Admin's Dashboard menu was hidden.
+
 ## [2.0.4] - 2026-10-20
 
 ### Fixed
