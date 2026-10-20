@@ -45,6 +45,7 @@ require_once BBCORE_DIR . 'includes/setup.php';
 require_once BBCORE_DIR . 'includes/brand-settings.php';
 require_once BBCORE_DIR . 'includes/plugin-list.php';
 require_once BBCORE_DIR . 'includes/dashboard.php';
+require_once BBCORE_DIR . 'includes/tutorials.php';
 require_once BBCORE_DIR . 'includes/support-form.php';
 require_once BBCORE_DIR . 'includes/blog-feed.php';
 require_once BBCORE_DIR . 'includes/login.php';

@@ -104,6 +104,14 @@ function bbcore_handle_delete_brand() {
 }
 add_action('admin_post_bbcore_delete_brand', 'bbcore_handle_delete_brand');
 
+// Per-site features (not tied to a brand).
+function bbcore_handle_save_features() {
+    bbcore_verify_brand_request('bbcore_save_features');
+    update_option('bbcore_tutorials_enabled', empty($_POST['tutorials_enabled']) ? 0 : 1);
+    bbcore_brand_settings_redirect(array('bbcore_msg' => 'features_saved'));
+}
+add_action('admin_post_bbcore_save_features', 'bbcore_handle_save_features');
+
 // ---------------------------------------------------------------------------
 // Page
 // ---------------------------------------------------------------------------
@@ -114,6 +122,7 @@ function bbcore_brand_settings_messages() {
         'saved' => array('success', 'Company saved.'),
         'deleted' => array('success', 'Company deleted.'),
         'reset' => array('success', 'Company reset to its built-in settings.'),
+        'features_saved' => array('success', 'Features saved.'),
         'unknown' => array('error', 'That company does not exist.'),
         'slug_taken' => array('error', 'That ID is empty or already used. Choose another.'),
         'name_required' => array('error', 'Company name is required.'),
@@ -138,6 +147,9 @@ function bbcore_render_brand_settings() {
         bbcore_render_brand_editor($edit);
     } else {
         bbcore_render_active_brand_picker();
+        if (!bbcore_needs_setup()) {
+            bbcore_render_features();
+        }
         bbcore_render_brand_list();
     }
     echo '</div>';
@@ -165,6 +177,27 @@ function bbcore_render_active_brand_picker() {
                 <?php endforeach; ?>
             </div>
             <?php submit_button($setup ? 'Use this company' : 'Save active company'); ?>
+        </form>
+    </div>
+    <?php
+}
+
+function bbcore_render_features() {
+    ?>
+    <div class="bbcore-card">
+        <h2>Features</h2>
+        <p>These apply to this site only, whichever company is active.</p>
+        <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
+            <?php wp_nonce_field('bbcore_save_features'); ?>
+            <input type="hidden" name="action" value="bbcore_save_features">
+            <table class="form-table" role="presentation"><tr>
+                <th scope="row">Tutorials</th>
+                <td>
+                    <label><input type="checkbox" name="tutorials_enabled" value="1" <?php checked(bbcore_tutorials_enabled()); ?>> Enable tutorials</label>
+                    <p class="description">Adds a Tutorials page under Dashboard for clients. <a href="<?php echo esc_url(bbcore_tutorials_manager_url()); ?>">Manage tutorial videos</a> (<?php echo (int) count(bbcore_get_tutorials()); ?> added)</p>
+                </td>
+            </tr></table>
+            <?php submit_button('Save features', 'secondary'); ?>
         </form>
     </div>
     <?php

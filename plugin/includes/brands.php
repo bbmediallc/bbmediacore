@@ -32,6 +32,7 @@ function bbcore_brand_fields() {
 
         'color_primary' => array('section' => 'dashboard_colors', 'type' => 'color', 'label' => 'Primary', 'help' => 'Card borders and the support form button.'),
         'color_link' => array('section' => 'dashboard_colors', 'type' => 'color', 'label' => 'Links', 'help' => 'Blog post links.'),
+        'color_accent' => array('section' => 'dashboard_colors', 'type' => 'color', 'label' => 'Accent', 'help' => 'Tutorial video icons.'),
 
         'login_border' => array('section' => 'login_colors', 'type' => 'color', 'label' => 'Login box top border'),
         'login_shadow' => array('section' => 'login_colors', 'type' => 'color', 'label' => 'Login box glow', 'help' => '8-digit hex allows transparency, e.g. #cc3e006b.'),

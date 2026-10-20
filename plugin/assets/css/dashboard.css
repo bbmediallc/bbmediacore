@@ -61,7 +61,8 @@
     transition: ease all .250s;
 }
 
-.custom-dashboard-right .support-form {
+.custom-dashboard-right .support-form,
+.custom-dashboard-left .bb-tutorials {
     background: #ffffff;
     padding: 25px;
     border-top: solid 4px var(--bbcore-primary, #35479d);
@@ -160,7 +161,7 @@
 }
 
 @media(min-width: 1300px){
-    a.post-title, .form-left h2 {
+    a.post-title, .form-left h2, .bb-tutorials h2 {
         font-size: 24px;
         line-height: 1;
     }
@@ -218,4 +219,49 @@ input[type="submit"][disabled] {
     padding: 10px;
     margin-top: 10px;
     border-radius: 5px;
+}
+
+/* Tutorials page (Dashboard > Tutorials) */
+
+.bb-tutorial-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.bb-tutorial-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 18px;
+}
+
+.bb-tutorial-item a {
+    color: #000000;
+    text-decoration: none;
+    font-size: 18px;
+    line-height: 1.3em;
+}
+
+.bb-tutorial-item a:hover {
+    text-decoration: underline;
+}
+
+.bb-tutorial-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+    color: var(--bbcore-accent, #2dbedf);
+}
+
+.bb-tutorials .welcome-message {
+    border-bottom: solid 1px #dddddd;
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+}
+
+.bb-tutorials .welcome-message p {
+    margin: 12px 0 4px 0;
+    font-size: 13px;
+    line-height: 1.5;
 }

@@ -62,7 +62,6 @@ add_action('admin_init', 'bbcore_redirect_to_dashboard');
 function bbcore_render_dashboard() {
     $current_user = wp_get_current_user();
     $first_name = !empty($current_user->user_firstname) ? $current_user->user_firstname : 'there';
-    $logo = bbcore_brand_image_url('logo');
     ?>
     <div class="wrap">
         <div class="custom-dashboard-layout">
@@ -75,33 +74,50 @@ function bbcore_render_dashboard() {
                     <?php echo do_shortcode('[latest_blog_posts]'); ?>
                 </div>
             </div>
-            <div class="custom-dashboard-right">
-                <div class="support-form">
-                    <div class="support-header">
-                        <div class="form-left">
-                            <h2>Need Some Help?</h2>
-                            <p>Submit a support ticket here, and our team will be in touch as soon as possible.</p>
-                        </div>
-                        <div class="form-right">
-                            <?php if ($logo) : ?>
-                                <div style="text-align: right; margin-bottom: 10px;">
-                                    <img src="<?php echo esc_url($logo); ?>" alt="<?php echo esc_attr(bbcore_brand('name') . ' Logo'); ?>" style="width: 150px; max-width: 150px; height: auto;">
-                                </div>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                    <?php bbcore_render_support_form(); ?>
-                </div>
-            </div>
+            <?php bbcore_render_support_box(); ?>
         </div>
     </div>
     <?php
 }
 
-// Hide admin notices on the custom dashboard.
+// The "Need Some Help?" column, shared by the dashboard and Tutorials pages.
+function bbcore_render_support_box() {
+    $logo = bbcore_brand_image_url('logo');
+    ?>
+    <div class="custom-dashboard-right">
+        <div class="support-form">
+            <div class="support-header">
+                <div class="form-left">
+                    <h2>Need Some Help?</h2>
+                    <p>Submit a support ticket here, and our team will be in touch as soon as possible.</p>
+                </div>
+                <div class="form-right">
+                    <?php if ($logo) : ?>
+                        <div style="text-align: right; margin-bottom: 10px;">
+                            <img src="<?php echo esc_url($logo); ?>" alt="<?php echo esc_attr(bbcore_brand('name') . ' Logo'); ?>" style="width: 150px; max-width: 150px; height: auto;">
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <?php bbcore_render_support_form(); ?>
+        </div>
+    </div>
+    <?php
+}
+
+// Screen IDs of the client-facing pages (dashboard, and Tutorials when enabled).
+function bbcore_client_screen_ids() {
+    $ids = array('toplevel_page_custom_dashboard');
+    if (!empty($GLOBALS['bbcore_tutorials_hook'])) {
+        $ids[] = $GLOBALS['bbcore_tutorials_hook'];
+    }
+    return $ids;
+}
+
+// Hide admin notices on the client-facing pages.
 function bbcore_hide_dashboard_notices() {
     $screen = get_current_screen();
-    if ($screen && $screen->id === 'toplevel_page_custom_dashboard') {
+    if ($screen && in_array($screen->id, bbcore_client_screen_ids(), true)) {
         remove_all_actions('admin_notices');
         remove_all_actions('all_admin_notices');
     }
@@ -114,6 +130,7 @@ function bbcore_brand_css_variables() {
     $map = array(
         '--bbcore-primary' => 'color_primary',
         '--bbcore-link' => 'color_link',
+        '--bbcore-accent' => 'color_accent',
         '--bbcore-login-border' => 'login_border',
         '--bbcore-login-shadow' => 'login_shadow',
         '--bbcore-login-gradient-start' => 'login_gradient_start',
@@ -142,9 +159,9 @@ function bbcore_brand_css_variables() {
     return ':root{' . $css . '}';
 }
 
-// Load dashboard assets only on the custom dashboard page.
+// Load dashboard assets only on the client-facing pages.
 function bbcore_enqueue_dashboard_assets($hook) {
-    if ($hook !== 'toplevel_page_custom_dashboard') {
+    if (!in_array($hook, bbcore_client_screen_ids(), true)) {
         return;
     }
 

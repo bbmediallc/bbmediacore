@@ -20,6 +20,7 @@ One plugin serves every company B&B Media builds sites for. Each site is set to 
 * A custom dashboard replacing the default WordPress dashboard.
 * A support form that emails the company's support team.
 * The company's three latest blog posts on the dashboard ([latest_blog_posts]).
+* Optional Tutorials page of video links (e.g. Loom), turned on per site.
 * [bbyear] shortcode for the current year.
 
 Only the support@bandbmedia.com account can choose the company or change brand settings (Settings > Brand Settings).
@@ -37,5 +38,6 @@ Sites updating from BB Media Core 1.6.x are set to B&B Media automatically.
 = 1.7.0 =
 * One plugin for every company, chosen per site on first activation.
 * New Settings > Brand Settings panel to edit or add companies.
+* Optional Tutorials page, replacing the ACF-based version (videos are imported automatically).
 * Fixed update checks: no longer hard-coded to 1.6.5, and GitHub is checked at most every 6 hours.
 * Support form accepts logged-in users only.

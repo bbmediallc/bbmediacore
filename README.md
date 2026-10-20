@@ -35,6 +35,17 @@ To allow another account on one site, add to that site's `wp-config.php`:
 define('BBCORE_ADMIN_EMAILS', 'support@bandbmedia.com, someone@example.com');
 ```
 
+## Tutorials
+
+Off by default. Turn on per site at Settings > Brand Settings > Features.
+Add, reorder or remove videos at Settings > Tutorial Videos. Clients see them
+at Dashboard > Tutorials. Both settings screens are visible only to
+support@bandbmedia.com.
+
+A site that ran the older ACF-based tutorials version has its videos copied
+in automatically on update. After checking them, the ACF "tutorial_links"
+field group (and ACF itself, if nothing else uses it) can be removed.
+
 ## Releasing a change
 
 1. Make the change in `plugin/`.

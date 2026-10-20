@@ -46,6 +46,8 @@ function bbcore_activate() {
         }
     }
 
+    bbcore_import_acf_tutorials();
+
     if (!get_option('bbcore_active_brand')) {
         update_option('bbcore_needs_setup', 1);
         set_transient('bbcore_setup_redirect', 1, 5 * MINUTE_IN_SECONDS);
@@ -68,6 +70,9 @@ function bbcore_maybe_upgrade() {
         // Updated in place from the old single-brand BB Media Core.
         update_option('bbcore_active_brand', BBCORE_DEFAULT_BRAND);
     }
+
+    // A site running the one-off ACF tutorials version keeps its videos.
+    bbcore_import_acf_tutorials();
 
     // Leftovers from 1.6.x.
     delete_option('bb_media_core_reactivate_plugin');

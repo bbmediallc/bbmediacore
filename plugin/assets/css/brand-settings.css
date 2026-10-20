@@ -97,3 +97,30 @@
     padding: 4px;
     background: #f0f0f1;
 }
+
+/* Settings > Tutorial Videos */
+
+.bbcore-tutorials-table {
+    margin-top: 12px;
+}
+
+.bbcore-tutorials-table .bbcore-drag {
+    width: 24px;
+    cursor: move;
+    vertical-align: middle;
+    color: #8c8f94;
+}
+
+.bbcore-tutorials-table td {
+    vertical-align: middle;
+}
+
+.bbcore-tutorials-table td:last-child {
+    width: 70px;
+    text-align: right;
+}
+
+.bbcore-tutorial-row.ui-sortable-helper {
+    background: #f0f6fc;
+    display: table;
+}

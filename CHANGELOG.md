@@ -16,6 +16,13 @@ company added later). It replaces the separate `knccore` and `pacecore` plugins.
 - The Plugins page shows the active company's plugin name and description.
 - Activating on a site that still runs the old `knccore` or `pacecore` plugin
   turns the old plugin off and pre-selects that company.
+- Tutorials: an optional Dashboard > Tutorials page listing video links
+  (e.g. Loom), turned on per site under Brand Settings > Features. The list is
+  edited at Settings > Tutorial Videos (support@bandbmedia.com only), with
+  drag-to-reorder. Needs no other plugin.
+- Sites running the one-off ACF tutorials version have their videos copied
+  over automatically, with tutorials turned on.
+- New brand color "Accent" (tutorial icons).
 - Support ticket emails include the site's address.
 - The login logo links to the company's website instead of wordpress.org.
 

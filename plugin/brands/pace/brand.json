@@ -11,6 +11,7 @@
     "login_background": "",
     "color_primary": "#0c3b5d",
     "color_link": "#009845",
+    "color_accent": "#009845",
     "login_border": "#0c3b5d",
     "login_shadow": "#0098456b",
     "login_gradient_start": "#0c3b5d",
