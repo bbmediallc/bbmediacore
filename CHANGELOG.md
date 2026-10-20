@@ -11,6 +11,10 @@ Each `## [version]` section becomes the release notes on GitHub.
 - Added an `Update URI` header so WordPress.org never offers a different
   plugin with the same folder name as an update.
 
+### Changed
+- Brand Settings company picker: the radio button now sits next to the
+  company name instead of above the logo.
+
 ## [2.0.0] - 2026-10-20
 
 The all-in-one release: one plugin for B&B Media, KNC Marketing and Pace

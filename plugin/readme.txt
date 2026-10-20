@@ -37,6 +37,7 @@ Sites updating from BB Media Core 1.6.x are set to B&B Media automatically.
 
 = 2.0.1 =
 * The Plugins page always shows "Enable auto-updates" for this plugin.
+* Brand Settings: the company picker's radio button sits next to the company name.
 
 = 2.0.0 =
 * Version 2.0: the all-in-one release (one plugin for every company, Brand Settings, Tutorials).

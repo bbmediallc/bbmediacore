@@ -52,7 +52,14 @@
 }
 
 .bbcore-brand-tile-name {
+    display: flex;
+    align-items: center;
+    gap: 6px;
     font-weight: 600;
+}
+
+.bbcore-brand-tile-name input[type="radio"] {
+    margin: 0;
 }
 
 .bbcore-pill {

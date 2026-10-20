@@ -171,9 +171,11 @@ function bbcore_render_active_brand_picker() {
             <div class="bbcore-brand-tiles">
                 <?php foreach (bbcore_get_brands() as $slug => $brand) : ?>
                     <label class="bbcore-brand-tile">
-                        <input type="radio" name="brand" value="<?php echo esc_attr($slug); ?>" <?php checked($slug, $active); ?>>
                         <span class="bbcore-brand-tile-logo"><?php bbcore_render_logo_preview($brand); ?></span>
-                        <span class="bbcore-brand-tile-name"><?php echo esc_html($brand['name']); ?></span>
+                        <span class="bbcore-brand-tile-name">
+                            <input type="radio" name="brand" value="<?php echo esc_attr($slug); ?>" <?php checked($slug, $active); ?>>
+                            <?php echo esc_html($brand['name']); ?>
+                        </span>
                     </label>
                 <?php endforeach; ?>
             </div>
