@@ -2,6 +2,12 @@
 
 Each `## [version]` section becomes the release notes on GitHub.
 
+## [2.0.2] - 2026-10-20
+
+### Changed
+- WordPress's update screens always show the B&B Media icon, to match the
+  "BB Media Core" name WordPress shows there, whichever company is active.
+
 ## [2.0.1] - 2026-10-20
 
 ### Fixed

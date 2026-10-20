@@ -107,6 +107,12 @@ function bbcore_plugin_slug() {
     return dirname(BBCORE_BASENAME);
 }
 
+// Always the B&B Media icon: WordPress's update screens show the plugin's
+// real name, BB Media Core, whichever company is active.
+function bbcore_update_icons() {
+    return array('svg' => BBCORE_URL . 'brands/' . BBCORE_DEFAULT_BRAND . '/icon.svg');
+}
+
 // Runs when WordPress refreshes its list of plugin updates (about twice a day).
 function bbcore_check_for_update($transient) {
     if (!is_object($transient) || empty($transient->checked)) {
@@ -126,7 +132,7 @@ function bbcore_check_for_update($transient) {
                 'new_version' => BBCORE_VERSION,
                 'url' => bbcore_brand('website_url'),
                 'package' => '',
-                'icons' => array('svg' => bbcore_brand_image_url('menu_icon')),
+                'icons' => bbcore_update_icons(),
             );
         }
         return $transient;
@@ -139,7 +145,7 @@ function bbcore_check_for_update($transient) {
         'new_version' => $release['version'],
         'url' => $release['url'],
         'package' => $release['package'],
-        'icons' => array('svg' => bbcore_brand_image_url('menu_icon')),
+        'icons' => bbcore_update_icons(),
     );
 
     if (version_compare(BBCORE_VERSION, $release['version'], '<')) {
