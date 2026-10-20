@@ -2,6 +2,12 @@
 
 Each `## [version]` section becomes the release notes on GitHub.
 
+## [1.7.1] - 2026-10-20
+
+### Changed
+- Brand Settings and Tutorial Videos moved from the Settings menu to the
+  Dashboard menu (still visible only to support@bandbmedia.com).
+
 ## [1.7.0] - 2026-10-20
 
 One plugin now serves B&B Media, KNC Marketing and Pace Marketing (and any

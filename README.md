@@ -27,7 +27,7 @@ CHANGELOG.md                 What changed in each version (becomes the release n
 - **Replacing an old KNC Core / Pace Marketing Core:** upload and activate
   `bbmediacore.zip`. The old plugin is turned off and its company is
   pre-selected. Confirm it, then delete the old plugin.
-- **Later:** Settings > Brand Settings (only visible to support@bandbmedia.com).
+- **Later:** Dashboard > Brand Settings (only visible to support@bandbmedia.com).
 
 To allow another account on one site, add to that site's `wp-config.php`:
 
@@ -37,8 +37,8 @@ define('BBCORE_ADMIN_EMAILS', 'support@bandbmedia.com, someone@example.com');
 
 ## Tutorials
 
-Off by default. Turn on per site at Settings > Brand Settings > Features.
-Add, reorder or remove videos at Settings > Tutorial Videos. Clients see them
+Off by default. Turn on per site at Dashboard > Brand Settings > Features.
+Add, reorder or remove videos at Dashboard > Tutorial Videos. Clients see them
 at Dashboard > Tutorials. Both settings screens are visible only to
 support@bandbmedia.com.
 
@@ -85,7 +85,7 @@ To build the zip yourself: `bash scripts/build.sh` (output in `dist/`).
 
 ## Adding a company
 
-On one site: Settings > Brand Settings > Add a company.
+On one site: Dashboard > Brand Settings > Add a company.
 
 For every site: open that company in Brand Settings, copy the text at the
 bottom, save it as `plugin/brands/<id>/brand.json`, add its `logo` and

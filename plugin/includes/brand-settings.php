@@ -1,5 +1,5 @@
 <?php
-// Settings > Brand Settings. Visible only to bbcore_is_brand_admin().
+// Dashboard > Brand Settings. Visible only to bbcore_is_brand_admin().
 
 if (!defined('ABSPATH')) {
     exit;
@@ -9,12 +9,13 @@ function bbcore_add_brand_settings_page() {
     if (!bbcore_is_brand_admin()) {
         return;
     }
-    add_options_page('Brand Settings', 'Brand Settings', 'manage_options', 'bbcore-brand-settings', 'bbcore_render_brand_settings');
+    $GLOBALS['bbcore_brand_settings_hook'] = add_submenu_page('custom_dashboard', 'Brand Settings', 'Brand Settings', 'manage_options', 'bbcore-brand-settings', 'bbcore_render_brand_settings');
 }
-add_action('admin_menu', 'bbcore_add_brand_settings_page');
+// After the Dashboard menu (priority 10) and the client Tutorials page (11).
+add_action('admin_menu', 'bbcore_add_brand_settings_page', 12);
 
 function bbcore_brand_settings_assets($hook) {
-    if ($hook !== 'settings_page_bbcore-brand-settings') {
+    if (empty($GLOBALS['bbcore_brand_settings_hook']) || $hook !== $GLOBALS['bbcore_brand_settings_hook']) {
         return;
     }
     wp_enqueue_media();

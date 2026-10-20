@@ -84,7 +84,7 @@ function bbcore_maybe_upgrade() {
 add_action('plugins_loaded', 'bbcore_maybe_upgrade');
 
 function bbcore_brand_settings_url() {
-    return admin_url('options-general.php?page=bbcore-brand-settings');
+    return admin_url('admin.php?page=bbcore-brand-settings');
 }
 
 // Right after activation, take the brand admin straight to setup.
@@ -107,7 +107,7 @@ function bbcore_setup_notice() {
         return;
     }
     $screen = get_current_screen();
-    if ($screen && $screen->id === 'settings_page_bbcore-brand-settings') {
+    if ($screen && !empty($GLOBALS['bbcore_brand_settings_hook']) && $screen->id === $GLOBALS['bbcore_brand_settings_hook']) {
         return;
     }
     printf(

@@ -2,7 +2,7 @@
 // Tutorial videos (e.g. Loom links).
 //
 // Turned on or off per site in Brand Settings. When on, clients get a
-// Dashboard > Tutorials page. The list is edited at Settings > Tutorial
+// Dashboard > Tutorials page. The list is edited at Dashboard > Tutorial
 // Videos, which only the brand admin can see.
 //
 // Replaces the ACF repeater ("tutorial_links" on an ACF options page) used by
@@ -24,7 +24,7 @@ function bbcore_get_tutorials() {
 }
 
 function bbcore_tutorials_manager_url() {
-    return admin_url('options-general.php?page=bbcore-tutorials');
+    return admin_url('admin.php?page=bbcore-tutorials');
 }
 
 function bbcore_add_tutorial_pages() {
@@ -38,12 +38,17 @@ function bbcore_add_tutorial_pages() {
             'bbcore_render_tutorials_page'
         );
     }
-    if (bbcore_is_brand_admin()) {
-        add_options_page('Tutorial Videos', 'Tutorial Videos', 'manage_options', 'bbcore-tutorials', 'bbcore_render_tutorials_manager');
-    }
 }
 // After bbcore_add_dashboard_page(), so the Dashboard menu exists.
 add_action('admin_menu', 'bbcore_add_tutorial_pages', 11);
+
+// Listed after Brand Settings (priority 12).
+function bbcore_add_tutorials_manager_page() {
+    if (bbcore_is_brand_admin()) {
+        $GLOBALS['bbcore_tutorials_manager_hook'] = add_submenu_page('custom_dashboard', 'Tutorial Videos', 'Tutorial Videos', 'manage_options', 'bbcore-tutorials', 'bbcore_render_tutorials_manager');
+    }
+}
+add_action('admin_menu', 'bbcore_add_tutorials_manager_page', 13);
 
 // ---------------------------------------------------------------------------
 // Client page: Dashboard > Tutorials
@@ -81,11 +86,11 @@ function bbcore_render_tutorials_page() {
 }
 
 // ---------------------------------------------------------------------------
-// Brand admin page: Settings > Tutorial Videos
+// Brand admin page: Dashboard > Tutorial Videos
 // ---------------------------------------------------------------------------
 
 function bbcore_tutorials_manager_assets($hook) {
-    if ($hook !== 'settings_page_bbcore-tutorials') {
+    if (empty($GLOBALS['bbcore_tutorials_manager_hook']) || $hook !== $GLOBALS['bbcore_tutorials_manager_hook']) {
         return;
     }
     wp_enqueue_style('bbcore-brand-settings', BBCORE_URL . 'assets/css/brand-settings.css', array(), BBCORE_VERSION);
