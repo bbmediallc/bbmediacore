@@ -122,6 +122,13 @@ function bbcore_plugin_requirements() {
         'tested' => 'Tested up to',
         'requires_php' => 'Requires PHP',
     ), 'plugin');
+    // "Tested up to: 7.1" covers every 7.1.x release, but WordPress compares
+    // it with the full version (7.1 is lower than 7.1.3) and says "Not
+    // tested". Within the tested branch, report the running version.
+    $wp = get_bloginfo('version');
+    if (!empty($data['tested']) && preg_match('/^\d+\.\d+$/', $data['tested']) && 0 === strpos($wp . '.', $data['tested'] . '.')) {
+        $data['tested'] = $wp;
+    }
     return array_filter($data);
 }
 

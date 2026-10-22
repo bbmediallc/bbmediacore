@@ -3,7 +3,7 @@
 Plugin Name: BB Media Core
 Plugin URI: https://github.com/bbmediallc/bbmediacore
 Description: A plugin that provides core functionality for B&B Media websites.
-Version: 2.0.5
+Version: 2.0.6
 Author: B&B Media, LLC
 Author URI: https://bandbmedia.com
 License: GPLv2 or later
@@ -26,7 +26,7 @@ if (!defined('ABSPATH')) {
 
 // Must match the Version header above and "Stable tag" in readme.txt.
 // scripts/build.sh refuses to build if they differ.
-define('BBCORE_VERSION', '2.0.5');
+define('BBCORE_VERSION', '2.0.6');
 define('BBCORE_FILE', __FILE__);
 define('BBCORE_DIR', plugin_dir_path(__FILE__));
 define('BBCORE_URL', plugin_dir_url(__FILE__));

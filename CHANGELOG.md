@@ -2,6 +2,14 @@
 
 Each `## [version]` section becomes the release notes on GitHub.
 
+## [2.0.6] - 2026-10-22
+
+### Fixed
+- The Updates screen said "Compatibility with WordPress 7.1.3: Not tested".
+  "Tested up to: 7.1" covers every 7.1.x release, but WordPress compared it
+  with the full version. On any 7.1.x site the update now reports that
+  version as tested; a new branch (7.2) still needs the header raised.
+
 ## [2.0.5] - 2026-10-20
 
 ### Added
